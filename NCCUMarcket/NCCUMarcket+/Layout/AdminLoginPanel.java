@@ -1,8 +1,10 @@
+package Layout;
+
+
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-
-
 
 public class AdminLoginPanel extends JPanel {
     public AdminLoginPanel(MainFrame frame) {
