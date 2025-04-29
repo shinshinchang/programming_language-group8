@@ -90,6 +90,18 @@ public class VendorEditPanel extends JPanel {
                     int responseCode = conn.getResponseCode();
                     if (responseCode == 200) {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功新增資料到 Firebase！");
+
+                        // 清空輸入欄位
+                        stallIdField.setText("");
+                        nameField.setText("");
+                        promoArea.setText("");
+                        contactField.setText("");
+                        mobilePay.setSelected(false);
+                        eatTag.setSelected(false);
+                        drinkTag.setSelected(false);
+                        cultureTag.setSelected(false);
+                        fashionTag.setSelected(false);
+                        otherTag.setSelected(false);
                     } else {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
                     }
