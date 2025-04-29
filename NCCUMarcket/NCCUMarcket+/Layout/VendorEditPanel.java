@@ -1,10 +1,11 @@
 package Layout;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class VendorEditPanel extends JPanel {
+    private boolean editMode = false;
+
     public VendorEditPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
@@ -69,10 +70,9 @@ public class VendorEditPanel extends JPanel {
         submitBtn.setForeground(Color.GRAY);
 
         submitBtn.addActionListener(new ActionListener() {
-            boolean editMode = false;
-
             public void actionPerformed(ActionEvent e) {
                 if (!editMode) {
+                    // 進入編輯模式
                     stallIdField.setEditable(true);
                     nameField.setEditable(true);
                     promoArea.setEditable(true);
@@ -90,7 +90,29 @@ public class VendorEditPanel extends JPanel {
                     submitBtn.setText("確定修改");
                     editMode = true;
                 } else {
-                    JOptionPane.showMessageDialog(VendorEditPanel.this, "資料已更新 (實際儲存功能尚未實作)");
+                    // 按下「確定修改」時收資料並傳到Firebase
+                    String stallId = stallIdField.getText();
+                    String name = nameField.getText();
+                    String description = promoArea.getText();
+                    String contactInfo = contactField.getText();
+                    boolean mobilePayment = mobilePay.isSelected();
+
+                    String selectedTag = "";
+                    if (eatTag.isSelected())
+                        selectedTag = "好吃";
+                    else if (drinkTag.isSelected())
+                        selectedTag = "好喝";
+                    else if (cultureTag.isSelected())
+                        selectedTag = "文創";
+                    else if (fashionTag.isSelected())
+                        selectedTag = "穿搭時尚";
+                    else if (otherTag.isSelected())
+                        selectedTag = "其他";
+
+                    FirebaseService.addOrUpdateVendor(stallId, name, selectedTag, description, contactInfo,
+                            mobilePayment);
+
+                    JOptionPane.showMessageDialog(VendorEditPanel.this, "資料已更新並儲存到Firebase！");
                     submitBtn.setText("建⽴");
                     submitBtn.setForeground(Color.GRAY);
                     editMode = false;

@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+import Layout.FirebaseService;
+
 public class VendorEditPanel extends JPanel {
     private boolean editMode = false;
 
@@ -97,13 +99,19 @@ public class VendorEditPanel extends JPanel {
                     boolean mobilePayment = mobilePay.isSelected();
 
                     String selectedTag = "";
-                    if (eatTag.isSelected()) selectedTag = "好吃";
-                    else if (drinkTag.isSelected()) selectedTag = "好喝";
-                    else if (cultureTag.isSelected()) selectedTag = "文創";
-                    else if (fashionTag.isSelected()) selectedTag = "穿搭時尚";
-                    else if (otherTag.isSelected()) selectedTag = "其他";
+                    if (eatTag.isSelected())
+                        selectedTag = "好吃";
+                    else if (drinkTag.isSelected())
+                        selectedTag = "好喝";
+                    else if (cultureTag.isSelected())
+                        selectedTag = "文創";
+                    else if (fashionTag.isSelected())
+                        selectedTag = "穿搭時尚";
+                    else if (otherTag.isSelected())
+                        selectedTag = "其他";
 
-                    FirebaseService.addOrUpdateVendor(stallId, name, selectedTag, description, contactInfo, mobilePayment);
+                    FirebaseService.addOrUpdateVendor(stallId, name, selectedTag, description, contactInfo,
+                            mobilePayment);
 
                     JOptionPane.showMessageDialog(VendorEditPanel.this, "資料已更新並儲存到Firebase！");
                     submitBtn.setText("建⽴");
