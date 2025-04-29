@@ -1,14 +1,13 @@
 package Layout;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+
 public class Main {
-    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JFrame mainFrame = new MainFrame();
-
+            new MainFrame();  // MainFrame 已經包含 setVisible(true)
         });
     }
 }
+
