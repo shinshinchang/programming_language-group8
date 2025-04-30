@@ -1,3 +1,14 @@
 {
-  "java.project.sourcePaths": ["Layout", "Main","FirebaseService"]
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar"
+  ],
+  "java.project.sourcePaths": [
+    "Layout",
+    "Main",
+    "FirebaseService"
+  ]
 }
+
+
+
+
