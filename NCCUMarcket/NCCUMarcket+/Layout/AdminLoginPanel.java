@@ -5,11 +5,17 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class AdminLoginPanel extends JPanel {
+    private JLayeredPane layeredPane;
     public AdminLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
-        JLabel title = new JLabel("管理者登入介面", SwingConstants.CENTER);
+        layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
+
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel title = new JLabel("管理者登入介面");
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        titlePanel.add(title);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -36,11 +42,24 @@ public class AdminLoginPanel extends JPanel {
             }
         });
 
-        JPanel bottomPanel = new JPanel();
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+
+
         bottomPanel.add(loginBtn);
 
-        add(title, BorderLayout.NORTH);
-        add(formPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        titlePanel.setBounds(0, 0, 400, 60);
+        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
+        formPanel.setBounds(0, 80, 400, 120);
+        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
+        bottomPanel.setBounds(0, 220, 400, 60);
+        layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
+
+        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
+        absoluteBackBtn.setBounds(10, 10, 50, 30);
+        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
+
+        add(layeredPane, BorderLayout.CENTER);
     }
 }

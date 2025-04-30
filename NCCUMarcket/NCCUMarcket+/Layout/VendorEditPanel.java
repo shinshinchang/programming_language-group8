@@ -1,16 +1,19 @@
 package Layout;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import javax.swing.*;
 
 public class VendorEditPanel extends JPanel {
     public VendorEditPanel(MainFrame frame) {
         setLayout(new BorderLayout());
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
 
         JLabel title = new JLabel("攤販資料建立/更新", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
@@ -37,7 +40,7 @@ public class VendorEditPanel extends JPanel {
         formPanel.add(nameField);
 
         formPanel.add(new JLabel("攤販標籤："));
-        JPanel tagPanel = new JPanel(new FlowLayout());
+        JPanel tagPanel = new JPanel();
         tagPanel.add(eatTag);
         tagPanel.add(drinkTag);
         tagPanel.add(cultureTag);
@@ -116,8 +119,22 @@ public class VendorEditPanel extends JPanel {
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(submitBtn);
 
-        add(title, BorderLayout.NORTH);
-        add(formPanel, BorderLayout.CENTER);
-        add(bottomPanel, BorderLayout.SOUTH);
+        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.add(title);
+        titlePanel.setBounds(5, 0, 380, 60);
+        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
+        formPanel.setBounds(5, 60, 380, 600);
+        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
+        bottomPanel.setBounds(5, 370, 380, 60);
+        layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
+
+        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
+        absoluteBackBtn.setBounds(10, 10, 50, 30);
+        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
+
+        add(layeredPane, BorderLayout.CENTER);
     }
 }
+

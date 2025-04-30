@@ -16,6 +16,10 @@ public class CustomerBrowsePanel extends JPanel {
     public CustomerBrowsePanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setLayout(null);
+        layeredPane.setPreferredSize(new Dimension(400, 600));
+
         JLabel title = new JLabel("商家列表", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
@@ -39,12 +43,11 @@ public class CustomerBrowsePanel extends JPanel {
 
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-
         JScrollPane scrollPane = new JScrollPane(listPanel);
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+        topPanel.setPreferredSize(new Dimension(400, 200));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
@@ -57,8 +60,19 @@ public class CustomerBrowsePanel extends JPanel {
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(buttonPanel);
 
-        add(topPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        topPanel.setBounds(0, 0, 400, 200);
+        scrollPane.setBounds(0, 200, 400, 360);
+
+        layeredPane.add(topPanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
+
+        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
+        absoluteBackBtn.setBounds(10, 10, 50, 30);
+        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
+
+        add(layeredPane, BorderLayout.CENTER);
 
         filterBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -126,4 +140,3 @@ public class CustomerBrowsePanel extends JPanel {
         public String tags;
     }
 }
-

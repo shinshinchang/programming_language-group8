@@ -3,6 +3,7 @@ package Layout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.security.auth.Refreshable;
 
 public class CustomerDetailPanel extends JPanel {
     public CustomerDetailPanel(MainFrame frame) {
@@ -49,5 +50,14 @@ public class CustomerDetailPanel extends JPanel {
         add(title, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
+        
+        
+        refresh(frame.getSelectedVendorId());
+    }
+
+
+    public void refresh(String id){
+        //從資料庫抓資料把標籤的資料更新
+        
     }
 }
