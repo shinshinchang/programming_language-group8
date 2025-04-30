@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "java",
+        "name": "執行 Main",
+        "request": "launch",
+        "mainClass": "Layout.Main",
+        "projectName": "nccu-market",
+        "classPaths": [
+          "gson-2.10.1.jar"
+        ]
+      }
+    ]
+  }
+  
