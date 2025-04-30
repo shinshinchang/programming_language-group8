@@ -12,14 +12,19 @@ public class MainFrame extends JFrame {
         layout = new CardLayout();
         mainPanel = new JPanel(layout);
 
-        mainPanel.add(new LoginPanel(this), "Login");
-        mainPanel.add(new VendorLoginPanel(this), "VendorLogin");
-        mainPanel.add(new VendorEditPanel(this), "VendorEdit");
-        mainPanel.add(new CustomerLoginPanel(this), "CustomerLogin");
-        mainPanel.add(new CustomerBrowsePanel(this), "CustomerBrowse");
-        mainPanel.add(new CustomerDetailPanel(this), "CustomerDetail");
-        mainPanel.add(new AdminLoginPanel(this), "AdminLogin");
-        mainPanel.add(new AdminEditPanel(this), "AdminEdit");
+        VendorEditPanel VendorEdit = new VendorEditPanel(this);
+        CustomerLoginPanel CustomerLogin = new CustomerLoginPanel(this);
+        CustomerBrowsePanel CustomerBrowse = new CustomerBrowsePanel(this);
+        CustomerDetailPanel CustomerDetail = new CustomerDetailPanel(this);
+        AdminLoginPanel AdminLogin = new AdminLoginPanel(this);
+        AdminEditPanel AdminEdit = new AdminEditPanel(this);
+
+        mainPanel.add(VendorEdit, "VendorEdit");
+        mainPanel.add(CustomerLogin, "CustomerLogin");
+        mainPanel.add(CustomerBrowse, "CustomerBrowse");
+        mainPanel.add(CustomerDetail, "CustomerDetail");
+        mainPanel.add(AdminLogin, "AdminLogin");
+        mainPanel.add(AdminEdit, "AdminEdit");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");
@@ -41,4 +46,9 @@ public class MainFrame extends JFrame {
     public String getSelectedVendorId() {
         return selectedVendorId;
     }
+
+    public void refresh(String id) {
+        this.CustomerDetail.refresh();
+    }
+
 }
