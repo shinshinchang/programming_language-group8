@@ -4,7 +4,7 @@ import java.awt.CardLayout;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
-    private int selectedVendorId;
+    private String selectedVendorId;
     CardLayout layout;
     JPanel mainPanel;
 
@@ -34,11 +34,11 @@ public class MainFrame extends JFrame {
         layout.show(mainPanel, panelName);
     }
 
-    public void setSelectedVendorId(int id) {
+    public void setSelectedVendorId(String id) {
         this.selectedVendorId = id;
     }
 
-    public int getSelectedVendorId() {
+    public String getSelectedVendorId() {
         return selectedVendorId;
     }
 }
