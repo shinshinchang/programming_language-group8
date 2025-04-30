@@ -3,7 +3,14 @@ package Layout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 
 public class CustomerBrowsePanel extends JPanel {
     public CustomerBrowsePanel(MainFrame frame) {
@@ -56,19 +63,43 @@ public class CustomerBrowsePanel extends JPanel {
         filterBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> selectedTags = new ArrayList<>();
-                if (tagEat.isSelected()) selectedTags.add("#好吃");
-                if (tagDrink.isSelected()) selectedTags.add("#好喝");
-                if (tagCulture.isSelected()) selectedTags.add("#文創");
-                if (tagFashion.isSelected()) selectedTags.add("#時尚穿搭");
-                if (tagOther.isSelected()) selectedTags.add("#其他");
+                if (tagEat.isSelected()) selectedTags.add("好吃");
+                if (tagDrink.isSelected()) selectedTags.add("好喝");
+                if (tagCulture.isSelected()) selectedTags.add("文創");
+                if (tagFashion.isSelected()) selectedTags.add("時尚穿搭");
+                if (tagOther.isSelected()) selectedTags.add("其他");
 
                 listPanel.removeAll();
 
-                ArrayList<Integer> matchedIds = new ArrayList<>();
-                matchedIds.add(87);
+                try {
+                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
 
-                for (int id : matchedIds) {
-                    listPanel.add(new VendorButton(frame, id));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    StringBuilder content = new StringBuilder();
+                    while ((inputLine = in.readLine()) != null) {
+                        content.append(inputLine);
+                    }
+                    in.close();
+
+                    Gson gson = new Gson();
+                    Type mapType = new TypeToken<Map<String, Vendor>>(){}.getType();
+                    Map<String, Vendor> vendorMap = gson.fromJson(content.toString(), mapType);
+
+                    for (Map.Entry<String, Vendor> entry : vendorMap.entrySet()) {
+                        Vendor vendor = entry.getValue();
+                        if (vendor.tags == null) continue;
+                        String lowerTag = vendor.tags.toLowerCase();
+                        boolean match = selectedTags.stream().anyMatch(t -> lowerTag.contains(t));
+                        if (match) {
+                            listPanel.add(new VendorButton(frame, entry.getKey(), vendor.name, vendor.tags));
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(CustomerBrowsePanel.this, "資料載入失敗: " + ex.getMessage());
                 }
 
                 listPanel.revalidate();
@@ -78,15 +109,8 @@ public class CustomerBrowsePanel extends JPanel {
     }
 
     private class VendorButton extends JButton {
-        private int vendorId;
-
-        public VendorButton(MainFrame frame, int vendorId) {
-            this.vendorId = vendorId;
-            String name = "⾼也椰薑餅屋";
-            String tags = "#好吃 #好喝";
-            double rating = 4.8;
-            setText(name + " " + tags + " 評價：" + rating + "/5");
-
+        public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
+            setText(name + " #" + tags);
             setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
             addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -96,4 +120,10 @@ public class CustomerBrowsePanel extends JPanel {
             });
         }
     }
+
+    public class Vendor {
+        public String name;
+        public String tags;
+    }
 }
+
