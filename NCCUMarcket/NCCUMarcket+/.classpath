@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry kind="src" path="Layout"/>
+  <classpathentry kind="src" path="Main"/>
+  <classpathentry kind="lib" path="lib/gson-2.10.1.jar"/>
+  <classpathentry kind="output" path="bin"/>
+</classpath>
