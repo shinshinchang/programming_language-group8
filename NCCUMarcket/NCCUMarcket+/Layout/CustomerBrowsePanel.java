@@ -128,8 +128,10 @@ public class CustomerBrowsePanel extends JPanel {
             setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
             addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    frame.setSelectedVendorId(vendorId);
+                    
                     frame.switchTo("CustomerDetail");
+                    frame.refresh(vendorId);
+                    
                 }
             });
         }

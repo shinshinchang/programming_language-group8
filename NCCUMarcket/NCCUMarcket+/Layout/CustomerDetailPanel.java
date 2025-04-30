@@ -52,12 +52,12 @@ public class CustomerDetailPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
         
         
-        refresh(frame.getSelectedVendorId());
     }
 
 
     public void refresh(String id){
-        //從資料庫抓資料把標籤的資料更新
+        //從資料庫抓資料把標籤的資料更新，當browserpanel的商家按鈕按下，會callout frame的refresh()，然後frame會call這個refresh，這裡在更新顯示標籤就好
+        //簡單來說商家按鈕按下這裡就顯示
         
     }
 }

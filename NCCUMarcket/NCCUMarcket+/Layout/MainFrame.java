@@ -8,23 +8,36 @@ public class MainFrame extends JFrame {
     CardLayout layout;
     JPanel mainPanel;
 
+    VendorLoginPanel VendorLogin;
+    VendorEditPanel VendorEdit;
+    CustomerLoginPanel CustomerLogin;
+    CustomerBrowsePanel CustomerBrowse;
+    CustomerDetailPanel CustomerDetail;
+    AdminLoginPanel AdminLogin;
+    AdminEditPanel AdminEdit;
+    LoginPanel Login;
+
     public MainFrame() {
         layout = new CardLayout();
         mainPanel = new JPanel(layout);
 
-        VendorEditPanel VendorEdit = new VendorEditPanel(this);
-        CustomerLoginPanel CustomerLogin = new CustomerLoginPanel(this);
-        CustomerBrowsePanel CustomerBrowse = new CustomerBrowsePanel(this);
-        CustomerDetailPanel CustomerDetail = new CustomerDetailPanel(this);
-        AdminLoginPanel AdminLogin = new AdminLoginPanel(this);
-        AdminEditPanel AdminEdit = new AdminEditPanel(this);
+        VendorLogin = new VendorLoginPanel(this);
+        VendorEdit = new VendorEditPanel(this);
+        CustomerLogin = new CustomerLoginPanel(this);
+        CustomerBrowse = new CustomerBrowsePanel(this);
+        CustomerDetail = new CustomerDetailPanel(this);
+        AdminLogin = new AdminLoginPanel(this);
+        AdminEdit = new AdminEditPanel(this);
+        Login = new LoginPanel(this);
 
+        mainPanel.add(VendorLogin, "VendorLogin");
         mainPanel.add(VendorEdit, "VendorEdit");
         mainPanel.add(CustomerLogin, "CustomerLogin");
         mainPanel.add(CustomerBrowse, "CustomerBrowse");
         mainPanel.add(CustomerDetail, "CustomerDetail");
         mainPanel.add(AdminLogin, "AdminLogin");
         mainPanel.add(AdminEdit, "AdminEdit");
+        mainPanel.add(Login, "Login");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");
@@ -48,7 +61,7 @@ public class MainFrame extends JFrame {
     }
 
     public void refresh(String id) {
-        this.CustomerDetail.refresh();
+        CustomerDetail.refresh(id);
     }
-
 }
+
