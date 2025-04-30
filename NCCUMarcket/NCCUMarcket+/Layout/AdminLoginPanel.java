@@ -1,7 +1,5 @@
 package Layout;
 
-
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,26 +11,27 @@ public class AdminLoginPanel extends JPanel {
         JLabel title = new JLabel("管理者登入介面", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        JPanel formPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        // JLabel idLabel = new JLabel("攤位編號：");
-        // JTextField idField = new JTextField();
-        JLabel passwordLabel = new JLabel("密碼：");
-        JPasswordField passwordField = new JPasswordField();
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
-        // formPanel.add(idLabel);
-        // formPanel.add(idField);
-        formPanel.add(passwordLabel);
-        formPanel.add(passwordField);
+        JPanel passwordPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel passwordLabel = new JLabel("密碼：");
+        JPasswordField passwordField = new JPasswordField(15);
+        passwordField.setPreferredSize(new Dimension(150, 30));
+        passwordPanel.add(passwordLabel);
+        passwordPanel.add(passwordField);
+
+        formPanel.add(passwordPanel);
 
         JButton loginBtn = new JButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String password = new String(passwordField.getPassword());
-                
                 if (password.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(AdminLoginPanel.this, "請輸入完整的編號與密碼！");
+                    JOptionPane.showMessageDialog(AdminLoginPanel.this, "請輸入密碼！");
                 } else {
-                    frame.switchTo("Admin");
+                    frame.switchTo("AdminEdit");
                 }
             }
         });
@@ -45,8 +44,3 @@ public class AdminLoginPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 }
-
-
-
-
-

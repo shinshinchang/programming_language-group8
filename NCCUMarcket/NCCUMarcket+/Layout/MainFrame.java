@@ -18,7 +18,8 @@ public class MainFrame extends JFrame {
         mainPanel.add(new CustomerLoginPanel(this), "CustomerLogin");
         mainPanel.add(new CustomerBrowsePanel(this), "CustomerBrowse");
         mainPanel.add(new CustomerDetailPanel(this), "CustomerDetail");
-        mainPanel.add(new AdminPanel(this), "Admin");
+        mainPanel.add(new AdminLoginPanel(this), "AdminLogin");
+        mainPanel.add(new AdminEditPanel(this), "AdminEdit");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");

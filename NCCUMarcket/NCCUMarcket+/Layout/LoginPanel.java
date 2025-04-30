@@ -30,7 +30,7 @@ public class LoginPanel extends JPanel {
 
         adminBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(LoginPanel.this, "管理員介面尚未實作");
+                frame.switchTo("AdminLogin");
             }
         });
 

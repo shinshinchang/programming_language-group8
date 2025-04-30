@@ -3,8 +3,8 @@ package Layout;
 import java.awt.*;
 import javax.swing.*;
 
-public class AdminPanel extends JPanel {
-    public AdminPanel(MainFrame frame) {
+public class AdminEditPanel extends JPanel {
+    public AdminEditPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
         JLabel title = new JLabel("管理者介面", SwingConstants.CENTER);
