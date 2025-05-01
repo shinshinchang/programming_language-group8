@@ -9,30 +9,44 @@ import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 
 public class VendorEditPanel extends JPanel {
+    public JButton absoluteBackBtn;
+    public JLayeredPane layeredPane;
+    public JLabel title;
+    public JPanel formPanel;
+    public JTextField stallIdField;
+    public JTextField nameField;
+    public JCheckBox eatTag, drinkTag, cultureTag, fashionTag, otherTag;
+    public JTextArea promoArea;
+    public JTextField contactField;
+    public JCheckBox mobilePay;
+    public JButton submitBtn;
+    public JPanel bottomPanel;
+    public JPanel titlePanel;
+
     public VendorEditPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
-        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
 
-        JLabel title = new JLabel("攤販資料建立/更新", SwingConstants.CENTER);
+        title = new JLabel("攤販資料建立/更新", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-        JTextField stallIdField = new JTextField();
-        JTextField nameField = new JTextField();
+        stallIdField = new JTextField();
+        nameField = new JTextField();
 
-        JCheckBox eatTag = new JCheckBox("好吃");
-        JCheckBox drinkTag = new JCheckBox("好喝");
-        JCheckBox cultureTag = new JCheckBox("文創");
-        JCheckBox fashionTag = new JCheckBox("穿搭時尚");
-        JCheckBox otherTag = new JCheckBox("其他");
+        eatTag = new JCheckBox("好吃");
+        drinkTag = new JCheckBox("好喝");
+        cultureTag = new JCheckBox("文創");
+        fashionTag = new JCheckBox("穿搭時尚");
+        otherTag = new JCheckBox("其他");
 
-        JTextArea promoArea = new JTextArea();
-        JTextField contactField = new JTextField();
-        JCheckBox mobilePay = new JCheckBox("是否支援行動支付");
+        promoArea = new JTextArea();
+        contactField = new JTextField();
+        mobilePay = new JCheckBox("是否支援行動支付");
 
         formPanel.add(new JLabel("攤位編號："));
         formPanel.add(stallIdField);
@@ -55,7 +69,7 @@ public class VendorEditPanel extends JPanel {
         formPanel.add(new JLabel("付款方式："));
         formPanel.add(mobilePay);
 
-        JButton submitBtn = new JButton("建立/更新資料");
+        submitBtn = new JButton("建立/更新資料");
         submitBtn.setForeground(Color.BLACK);
 
         submitBtn.addActionListener(new ActionListener() {
@@ -93,8 +107,6 @@ public class VendorEditPanel extends JPanel {
                     int responseCode = conn.getResponseCode();
                     if (responseCode == 200) {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功新增資料到 Firebase！");
-
-                        // 清空輸入欄位
                         stallIdField.setText("");
                         nameField.setText("");
                         promoArea.setText("");
@@ -116,19 +128,19 @@ public class VendorEditPanel extends JPanel {
             }
         });
 
-        JPanel bottomPanel = new JPanel();
+        bottomPanel = new JPanel();
         bottomPanel.add(submitBtn);
 
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
         titlePanel.setBounds(5, 0, 380, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
-        formPanel.setBounds(5, 60, 380, 600);
+        formPanel.setBounds(5, 60, 380, 550);
         layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
-        bottomPanel.setBounds(5, 370, 380, 60);
+        bottomPanel.setBounds(5, 610, 380, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
-        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
@@ -137,4 +149,3 @@ public class VendorEditPanel extends JPanel {
         add(layeredPane, BorderLayout.CENTER);
     }
 }
-
