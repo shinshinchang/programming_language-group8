@@ -12,7 +12,7 @@ public class CustomerDetailPanel extends VendorEditPanel {
         absoluteBackBtn.addActionListener(e -> frame.switchTo("CustomerBrowse"));
 
         super.stallIdField.setEditable(false);
-        ;
+
         super.nameField.setEditable(false);
         super.eatTag.setEnabled(false);
         super.drinkTag.setEnabled(false);
