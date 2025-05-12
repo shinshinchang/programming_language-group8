@@ -17,7 +17,7 @@ public class AdminLoginPanel extends JPanel {
     public JButton absoluteBackBtn;
 
     private String inputPassword;
-    private String dbPassword;//這裡抓資料庫的Passward比對
+    private String dbPassword;//這裡抓資料庫的Password比對
 
     public AdminLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
@@ -47,7 +47,7 @@ public class AdminLoginPanel extends JPanel {
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 inputPassword = new String(passwordField.getPassword());
-                dbPassword = "1234";//這裡抓資料庫的Passward比對
+                dbPassword = "1234";//這裡抓資料庫的Password比對
                 if (inputPassword.equals(dbPassword)) {
                     frame.switchTo("AdminEdit");
                     clearFields();
