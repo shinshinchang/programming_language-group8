@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 
 public class VendorEditPanel extends JPanel {
+
     public JButton absoluteBackBtn;
     public JLayeredPane layeredPane;
     public JLabel title;
@@ -107,16 +108,7 @@ public class VendorEditPanel extends JPanel {
                     int responseCode = conn.getResponseCode();
                     if (responseCode == 200) {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功新增資料到 Firebase！");
-                        stallIdField.setText("");
-                        nameField.setText("");
-                        promoArea.setText("");
-                        contactField.setText("");
-                        mobilePay.setSelected(false);
-                        eatTag.setSelected(false);
-                        drinkTag.setSelected(false);
-                        cultureTag.setSelected(false);
-                        fashionTag.setSelected(false);
-                        otherTag.setSelected(false);
+                        clearFields();
                     } else {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
                     }
@@ -135,17 +127,33 @@ public class VendorEditPanel extends JPanel {
         titlePanel.add(title);
         titlePanel.setBounds(5, 0, 380, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
-        formPanel.setBounds(5, 60, 380, 550);
+        formPanel.setBounds(5, 60, 380, 500);
         layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
-        bottomPanel.setBounds(5, 610, 380, 60);
+        bottomPanel.setBounds(5, 570, 380, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
         absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
-        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        absoluteBackBtn.addActionListener(e -> {
+            clearFields();
+            frame.switchTo("Login");
+        });
         layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
+    }
+
+    public void clearFields() {
+        stallIdField.setText("");
+        nameField.setText("");
+        promoArea.setText("");
+        contactField.setText("");
+        mobilePay.setSelected(false);
+        eatTag.setSelected(false);
+        drinkTag.setSelected(false);
+        cultureTag.setSelected(false);
+        fashionTag.setSelected(false);
+        otherTag.setSelected(false);
     }
 }

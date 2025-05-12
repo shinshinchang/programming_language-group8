@@ -15,7 +15,10 @@ public class MainFrame extends JFrame {
     CustomerDetailPanel CustomerDetail;
     AdminLoginPanel AdminLogin;
     AdminEditPanel AdminEdit;
+    AdminBrowsePanel AdminBrowse;
+    AdminDatabasePanel AdminDatabase;
     LoginPanel Login;
+
 
     public MainFrame() {
         layout = new CardLayout();
@@ -28,6 +31,8 @@ public class MainFrame extends JFrame {
         CustomerDetail = new CustomerDetailPanel(this);
         AdminLogin = new AdminLoginPanel(this);
         AdminEdit = new AdminEditPanel(this);
+        AdminBrowse = new AdminBrowsePanel(this);
+        AdminDatabase = new AdminDatabasePanel(this);
         Login = new LoginPanel(this);
 
         mainPanel.add(VendorLogin, "VendorLogin");
@@ -38,6 +43,8 @@ public class MainFrame extends JFrame {
         mainPanel.add(AdminLogin, "AdminLogin");
         mainPanel.add(AdminEdit, "AdminEdit");
         mainPanel.add(Login, "Login");
+        mainPanel.add(AdminBrowse , "AdminBrowse ");
+        // mainPanel.add(AdminDatabase, "AdminDatabase");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");

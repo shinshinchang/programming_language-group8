@@ -13,48 +13,58 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 public class CustomerBrowsePanel extends JPanel {
+
+    private MainFrame frame;
+    private JLayeredPane layeredPane;
+    private JLabel title;
+    private JPanel filterPanel, buttonPanel, listPanel, topPanel, titlePanel;
+    private JCheckBox tagEat, tagDrink, tagCulture, tagFashion, tagOther;
+    private JButton filterBtn, absoluteBackBtn;
+    private JScrollPane scrollPane;
+
     public CustomerBrowsePanel(MainFrame frame) {
+        this.frame = frame;
         setLayout(new BorderLayout());
 
-        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
         layeredPane.setPreferredSize(new Dimension(400, 600));
 
-        JLabel title = new JLabel("商家列表", SwingConstants.CENTER);
+        title = new JLabel("商家列表", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        JPanel filterPanel = new JPanel(new FlowLayout());
-        JCheckBox tagEat = new JCheckBox("#好吃", true);
-        JCheckBox tagDrink = new JCheckBox("#好喝", true);
-        JCheckBox tagCulture = new JCheckBox("#文創");
-        JCheckBox tagFashion = new JCheckBox("#時尚穿搭");
-        JCheckBox tagOther = new JCheckBox("#其他");
+        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.add(title);
 
+        tagEat = new JCheckBox("#好吃", true);
+        tagDrink = new JCheckBox("#好喝", true);
+        tagCulture = new JCheckBox("#文創");
+        tagFashion = new JCheckBox("#時尚穿搭");
+        tagOther = new JCheckBox("#其他");
+
+        filterPanel = new JPanel(new FlowLayout());
         filterPanel.add(tagEat);
         filterPanel.add(tagDrink);
         filterPanel.add(tagCulture);
         filterPanel.add(tagFashion);
         filterPanel.add(tagOther);
-
-        JButton filterBtn = new JButton("篩選商家");
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        filterBtn.setPreferredSize(new Dimension(150, 30));
-        buttonPanel.add(filterBtn);
-
-        JPanel listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(listPanel);
-
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setPreferredSize(new Dimension(400, 200));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        titlePanel.add(title);
-        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        topPanel.add(titlePanel);
         filterPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         filterPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, filterPanel.getPreferredSize().height));
+
+        filterBtn = new JButton("篩選商家");
+        filterBtn.setPreferredSize(new Dimension(150, 30));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(filterBtn);
+
+        listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        scrollPane = new JScrollPane(listPanel);
+
+        topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setPreferredSize(new Dimension(400, 200));
+        topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        topPanel.add(titlePanel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         topPanel.add(filterPanel);
         topPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -66,7 +76,7 @@ public class CustomerBrowsePanel extends JPanel {
         layeredPane.add(topPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
-        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
@@ -91,8 +101,8 @@ public class CustomerBrowsePanel extends JPanel {
                     conn.setRequestMethod("GET");
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String inputLine;
                     StringBuilder content = new StringBuilder();
+                    String inputLine;
                     while ((inputLine = in.readLine()) != null) {
                         content.append(inputLine);
                     }
@@ -122,17 +132,13 @@ public class CustomerBrowsePanel extends JPanel {
         });
     }
 
-    private class VendorButton extends JButton {
+    public class VendorButton extends JButton {
         public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
             setText(name + " #" + tags);
             setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
-            addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    
-                    frame.switchTo("CustomerDetail");
-                    frame.refresh(vendorId);
-                    
-                }
+            addActionListener(e -> {
+                frame.switchTo("CustomerDetail");
+                frame.refresh(vendorId);
             });
         }
     }

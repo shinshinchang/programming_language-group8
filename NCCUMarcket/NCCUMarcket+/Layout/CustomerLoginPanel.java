@@ -9,23 +9,33 @@ import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 
 public class CustomerLoginPanel extends JPanel {
+
+    public JLayeredPane layeredPane;
+    public JLabel title;
+    public JPanel formPanel;
+    public JTextField nicknameField;
+    public JButton loginBtn;
+    public JPanel bottomPanel;
+    public JPanel titlePanel;
+    public JButton absoluteBackBtn;
+
     public CustomerLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
-        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
 
-        JLabel title = new JLabel("顧客登入介面", SwingConstants.CENTER);
+        title = new JLabel("顧客登入介面", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        JPanel formPanel = new JPanel();
+        formPanel = new JPanel();
         formPanel.setLayout(new FlowLayout());
         formPanel.add(new JLabel("輸入暱稱："));
 
-        JTextField nicknameField = new JTextField(20);
+        nicknameField = new JTextField(20);
         formPanel.add(nicknameField);
 
-        JButton loginBtn = new JButton("登入");
+        loginBtn = new JButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nickname = nicknameField.getText();
@@ -48,9 +58,8 @@ public class CustomerLoginPanel extends JPanel {
 
                         int responseCode = conn.getResponseCode();
                         if (responseCode == 200) {
-                            
                             JOptionPane.showMessageDialog(CustomerLoginPanel.this, "✅ 成功登入並記錄暱稱！");
-                            nicknameField.setText("");
+                            clearFields();
                             frame.switchTo("CustomerBrowse");
                         } else {
                             JOptionPane.showMessageDialog(CustomerLoginPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
@@ -63,10 +72,10 @@ public class CustomerLoginPanel extends JPanel {
             }
         });
 
-        JPanel bottomPanel = new JPanel();
+        bottomPanel = new JPanel();
         bottomPanel.add(loginBtn);
 
-        JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
         titlePanel.setBounds(0, 0, 405, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
@@ -75,12 +84,16 @@ public class CustomerLoginPanel extends JPanel {
         bottomPanel.setBounds(0, 160, 405, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
-        JButton absoluteBackBtn = new JButton("←");
+        absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
         layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
+    }
+
+    public void clearFields() {
+        nicknameField.setText("");
     }
 }
