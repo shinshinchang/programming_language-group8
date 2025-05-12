@@ -5,6 +5,7 @@ import javax.swing.*;
 
 public class MainFrame extends JFrame {
     private String selectedVendorId;
+    private String customerNickname;
     CardLayout layout;
     JPanel mainPanel;
 
@@ -56,6 +57,7 @@ public class MainFrame extends JFrame {
         setSize(405, 720);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+
     }
 
     public void switchTo(String panelName) {
@@ -74,5 +76,12 @@ public class MainFrame extends JFrame {
     public void refresh(String id) {
         CustomerDetail.refresh(id);
     }
+    public void setCustomerNickname(String nickname){
+        this.customerNickname=nickname;
+    }
+    public String getCustomerNickname(){
+        return customerNickname;
+    }
+
 }
 
