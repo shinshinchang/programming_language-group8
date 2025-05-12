@@ -1,23 +1,20 @@
 package Layout;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import javax.swing.*;
+import java.util.Scanner;
 
 public class CustomerLoginPanel extends JPanel {
-
-    public JLayeredPane layeredPane;
-    public JLabel title;
-    public JPanel formPanel;
-    public JTextField nicknameField;
-    public JButton loginBtn;
-    public JPanel bottomPanel;
-    public JPanel titlePanel;
-    public JButton absoluteBackBtn;
+    private JLayeredPane layeredPane;
+    private JTextField nicknameField;
+    private JButton loginBtn;
+    private JPanel formPanel, bottomPanel, titlePanel;
+    private JLabel title;
+    private JButton absoluteBackBtn;
 
     public CustomerLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
@@ -28,8 +25,7 @@ public class CustomerLoginPanel extends JPanel {
         title = new JLabel("顧客登入介面", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
-        formPanel = new JPanel();
-        formPanel.setLayout(new FlowLayout());
+        formPanel = new JPanel(new FlowLayout());
         formPanel.add(new JLabel("輸入暱稱："));
 
         nicknameField = new JTextField(20);
@@ -41,34 +37,52 @@ public class CustomerLoginPanel extends JPanel {
                 String nickname = nicknameField.getText();
                 if (nickname.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(CustomerLoginPanel.this, "請輸入暱稱！");
-                } else {
-                    try {
-                        String json = String.format("{\"nickname\":\"%s\"}", nickname);
+                    return;
+                }
 
-                        URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/customers.json");
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setRequestMethod("POST");
-                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        conn.setDoOutput(true);
+                // 記錄暱稱進 frame
+                frame.setCustomerNickname(nickname);
 
-                        try (OutputStream os = conn.getOutputStream()) {
-                            byte[] input = json.getBytes(StandardCharsets.UTF_8);
+                // 檢查是否已存在該暱稱
+                try {
+                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/customers.json");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json");
+
+                    Scanner scanner = new Scanner(conn.getInputStream());
+                    StringBuilder json = new StringBuilder();
+                    while (scanner.hasNext()) {
+                        json.append(scanner.nextLine());
+                    }
+                    scanner.close();
+
+                    if (!json.toString().contains("\"" + nickname + "\"")) {
+                        // 不存在則新增
+                        URL postUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/customers.json");
+                        HttpURLConnection postConn = (HttpURLConnection) postUrl.openConnection();
+                        postConn.setRequestMethod("POST");
+                        postConn.setRequestProperty("Content-Type", "application/json");
+                        postConn.setDoOutput(true);
+
+                        String body = "{\"nickname\":\"" + nickname + "\"}";
+                        try (OutputStream os = postConn.getOutputStream()) {
+                            byte[] input = body.getBytes("utf-8");
                             os.write(input, 0, input.length);
                         }
 
-                        int responseCode = conn.getResponseCode();
-                        if (responseCode == 200) {
-                            JOptionPane.showMessageDialog(CustomerLoginPanel.this, "✅ 成功登入並記錄暱稱！");
-                            clearFields();
-                            frame.switchTo("CustomerBrowse");
-                        } else {
-                            JOptionPane.showMessageDialog(CustomerLoginPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
+                        int responseCode = postConn.getResponseCode();
+                        if (responseCode != 200) {
+                            JOptionPane.showMessageDialog(CustomerLoginPanel.this, "寫入暱稱失敗：" + responseCode);
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(CustomerLoginPanel.this, "🚨 發生錯誤：" + ex.getMessage());
                     }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(CustomerLoginPanel.this, "檢查暱稱時發生錯誤");
                 }
+
+                clearFields();
+                frame.switchTo("CustomerBrowse");
             }
         });
 
@@ -79,8 +93,10 @@ public class CustomerLoginPanel extends JPanel {
         titlePanel.add(title);
         titlePanel.setBounds(0, 0, 405, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
+
         formPanel.setBounds(0, 60, 405, 100);
         layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
+
         bottomPanel.setBounds(0, 160, 405, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
