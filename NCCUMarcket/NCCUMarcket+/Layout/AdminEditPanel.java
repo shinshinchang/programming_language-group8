@@ -9,6 +9,7 @@ public class AdminEditPanel extends JPanel {
     public JPanel titlePanel;
     public JButton browseBtn;
     public JButton vendorDataBtn;
+    public JButton pwChangeBtn;
     public JButton absoluteBackBtn;
 
     public AdminEditPanel(MainFrame frame) {
@@ -34,6 +35,11 @@ public class AdminEditPanel extends JPanel {
         vendorDataBtn.setBounds(100, 160, 200, 40);
         vendorDataBtn.addActionListener(e -> frame.switchTo("AdminDatabase"));
         layeredPane.add(vendorDataBtn, JLayeredPane.DEFAULT_LAYER);
+
+        pwChangeBtn = new JButton("更改密碼");
+        pwChangeBtn.setBounds(100, 220, 200, 40);
+        pwChangeBtn.addActionListener(e -> frame.switchTo("pwChangeBtn"));
+        layeredPane.add(pwChangeBtn, JLayeredPane.DEFAULT_LAYER);
 
         absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));

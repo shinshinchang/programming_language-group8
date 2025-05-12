@@ -14,12 +14,12 @@ import com.google.gson.reflect.TypeToken;
 
 public class CustomerBrowsePanel extends JPanel {
 
-    private MainFrame frame;
+    public MainFrame frame;
     private JLayeredPane layeredPane;
-    private JLabel title;
+    public JLabel title;
     private JPanel filterPanel, buttonPanel, listPanel, topPanel, titlePanel;
     private JCheckBox tagEat, tagDrink, tagCulture, tagFashion, tagOther;
-    private JButton filterBtn, absoluteBackBtn;
+    public JButton filterBtn, absoluteBackBtn;
     private JScrollPane scrollPane;
 
     public CustomerBrowsePanel(MainFrame frame) {
@@ -87,16 +87,22 @@ public class CustomerBrowsePanel extends JPanel {
         filterBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> selectedTags = new ArrayList<>();
-                if (tagEat.isSelected()) selectedTags.add("好吃");
-                if (tagDrink.isSelected()) selectedTags.add("好喝");
-                if (tagCulture.isSelected()) selectedTags.add("文創");
-                if (tagFashion.isSelected()) selectedTags.add("時尚穿搭");
-                if (tagOther.isSelected()) selectedTags.add("其他");
+                if (tagEat.isSelected())
+                    selectedTags.add("好吃");
+                if (tagDrink.isSelected())
+                    selectedTags.add("好喝");
+                if (tagCulture.isSelected())
+                    selectedTags.add("文創");
+                if (tagFashion.isSelected())
+                    selectedTags.add("時尚穿搭");
+                if (tagOther.isSelected())
+                    selectedTags.add("其他");
 
                 listPanel.removeAll();
 
                 try {
-                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+                    URL url = new URL(
+                            "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
 
@@ -109,16 +115,18 @@ public class CustomerBrowsePanel extends JPanel {
                     in.close();
 
                     Gson gson = new Gson();
-                    Type mapType = new TypeToken<Map<String, Vendor>>(){}.getType();
+                    Type mapType = new TypeToken<Map<String, Vendor>>() {
+                    }.getType();
                     Map<String, Vendor> vendorMap = gson.fromJson(content.toString(), mapType);
 
                     for (Map.Entry<String, Vendor> entry : vendorMap.entrySet()) {
                         Vendor vendor = entry.getValue();
-                        if (vendor.tags == null) continue;
+                        if (vendor.tags == null)
+                            continue;
                         String lowerTag = vendor.tags.toLowerCase();
                         boolean match = selectedTags.stream().anyMatch(t -> lowerTag.contains(t));
                         if (match) {
-                            listPanel.add(new VendorButton(frame, entry.getKey(), vendor.name, vendor.tags));
+                            listPanel.add(createVendorButton(entry.getKey(), vendor.name, vendor.tags));
                         }
                     }
                 } catch (Exception ex) {
@@ -141,6 +149,10 @@ public class CustomerBrowsePanel extends JPanel {
                 frame.refresh(vendorId);
             });
         }
+    }
+
+    protected JButton createVendorButton(String vendorId, String name, String tags) {
+        return new VendorButton(frame, vendorId, name, tags); // 預設建立原始 VendorButton
     }
 
     public class Vendor {

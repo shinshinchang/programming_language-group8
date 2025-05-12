@@ -17,6 +17,7 @@ public class MainFrame extends JFrame {
     AdminEditPanel AdminEdit;
     AdminBrowsePanel AdminBrowse;
     AdminDatabasePanel AdminDatabase;
+    AdminVendorEditPanel AdminVendorEdit;
     LoginPanel Login;
 
 
@@ -32,7 +33,8 @@ public class MainFrame extends JFrame {
         AdminLogin = new AdminLoginPanel(this);
         AdminEdit = new AdminEditPanel(this);
         AdminBrowse = new AdminBrowsePanel(this);
-        AdminDatabase = new AdminDatabasePanel(this);
+        // AdminDatabase = new AdminDatabasePanel(this);
+        AdminVendorEdit = new AdminVendorEditPanel(this);
         Login = new LoginPanel(this);
 
         mainPanel.add(VendorLogin, "VendorLogin");
@@ -43,8 +45,9 @@ public class MainFrame extends JFrame {
         mainPanel.add(AdminLogin, "AdminLogin");
         mainPanel.add(AdminEdit, "AdminEdit");
         mainPanel.add(Login, "Login");
-        mainPanel.add(AdminBrowse , "AdminBrowse ");
+        mainPanel.add(AdminBrowse , "AdminBrowse");
         // mainPanel.add(AdminDatabase, "AdminDatabase");
+        mainPanel.add( AdminVendorEdit, "AdminVendorEdit");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");
@@ -57,6 +60,7 @@ public class MainFrame extends JFrame {
 
     public void switchTo(String panelName) {
         layout.show(mainPanel, panelName);
+        System.out.println(panelName);
     }
 
     public void setSelectedVendorId(String id) {
