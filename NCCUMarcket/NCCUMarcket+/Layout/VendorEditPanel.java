@@ -35,13 +35,14 @@ public class VendorEditPanel extends JPanel {
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
 
-        title = new JLabel("攤販資料建立/更新", SwingConstants.CENTER);
+        title = new JLabel("攤販資料更新", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
 
         formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
         stallIdField = new JTextField();
+        stallIdField.setEditable(false);
         nameField = new JTextField();
 
         eatTag = new JCheckBox("好吃");
@@ -56,6 +57,7 @@ public class VendorEditPanel extends JPanel {
 
         formPanel.add(new JLabel("攤位編號："));
         formPanel.add(stallIdField);
+        
         formPanel.add(new JLabel("名稱："));
         formPanel.add(nameField);
 
@@ -75,7 +77,7 @@ public class VendorEditPanel extends JPanel {
         formPanel.add(new JLabel("付款方式："));
         formPanel.add(mobilePay);
 
-        submitBtn = new JButton("建立/更新資料");
+        submitBtn = new JButton("更新資料");
         submitBtn.setForeground(Color.BLACK);
 
         submitBtn.addActionListener(new ActionListener() {
