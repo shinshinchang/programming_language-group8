@@ -1,16 +1,7 @@
 package Layout;
 
 import java.awt.event.*;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.util.Map;
-import java.net.URL;
-import java.lang.reflect.Type;
 
-import javax.swing.JOptionPane;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class CustomerDetailPanel extends VendorEditPanel {
     public CustomerDetailPanel(MainFrame frame) {
