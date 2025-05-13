@@ -76,6 +76,7 @@ public class AdminDatabasePanel extends JPanel {
             JButton btn = new JButton("攤位 " + id + " ｜ 密碼：" + pw);
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             listPanel.add(btn);
+            
         }
         listPanel.revalidate();
         listPanel.repaint();
