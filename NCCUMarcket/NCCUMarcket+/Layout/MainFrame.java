@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(AdminEdit, "AdminEdit");
         mainPanel.add(Login, "Login");
         mainPanel.add(AdminBrowse , "AdminBrowse");
-        mainPanel.add(AdminDatabase, "AdminDatabase");
+        // mainPanel.add(AdminDatabase, "AdminDatabase");
         mainPanel.add( AdminVendorEdit, "AdminVendorEdit");
 
         add(mainPanel);
