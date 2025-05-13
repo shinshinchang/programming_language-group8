@@ -2,6 +2,11 @@ package Layout;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import javax.swing.*;
 
 public class VendorLoginPanel extends JPanel {
@@ -49,17 +54,38 @@ public class VendorLoginPanel extends JPanel {
         formPanel.add(idPanel);
         formPanel.add(passwordPanel);
 
+        // ✅ 初始化 loginBtn 並設定事件
         loginBtn = new JButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String id = idField.getText();
-                String password = new String(passwordField.getPassword());
+                String id = idField.getText().trim();
+                String password = new String(passwordField.getPassword()).trim();
 
-                if (id.trim().isEmpty() || password.trim().isEmpty()) {
+                if (id.isEmpty() || password.isEmpty()) {
                     JOptionPane.showMessageDialog(VendorLoginPanel.this, "請輸入完整的編號與密碼！");
-                } else {
-                    frame.switchTo("VendorEdit");
+                    return;
                 }
+
+                try {
+                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts/" + id + ".json");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String dbPassword = reader.readLine().replaceAll("\"", "");
+                    reader.close();
+
+                    if (password.equals(dbPassword)) {
+                        frame.setSelectedVendorId(id);  // ✅ 儲存攤販ID供後續使用
+                        frame.switchTo("VendorEdit");
+                    } else {
+                        JOptionPane.showMessageDialog(VendorLoginPanel.this, "帳號或密碼錯誤！");
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(VendorLoginPanel.this, "登入失敗！");
+                }
+
                 clearFields();
             }
         });

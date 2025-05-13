@@ -1,6 +1,11 @@
 package Layout;
 
 import java.awt.*;
+import java.net.HttpURLConnection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.net.URL;
+
 import javax.swing.*;
 
 public class AdminDatabasePanel extends JPanel {
@@ -69,15 +74,49 @@ public class AdminDatabasePanel extends JPanel {
     }
 
     private void addVendorButtons(int count) {
-        listPanel.removeAll(); // 每次新增會清空原有列表
-        for (int i = 0; i < count; i++) {
-            String id = String.format("%02d", i);
-            String pw = id + "1234";
-            JButton btn = new JButton(id + " ｜ 密碼：" + pw);
-            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            listPanel.add(btn);
-        }
-        listPanel.revalidate();
-        listPanel.repaint();
+    listPanel.removeAll();
+
+    // Firebase 準備資料
+    Map<String, String> vendorMap = new LinkedHashMap<>();
+    for (int i = 0; i < count; i++) {
+        String id = String.format("%02d", i);
+        String pw = id + "1234";
+        vendorMap.put(id, pw);
     }
+
+    // 寫入 Firebase
+    try {
+        URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("PUT");
+        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        conn.setDoOutput(true);
+
+        String json = new com.google.gson.Gson().toJson(vendorMap);
+        conn.getOutputStream().write(json.getBytes("UTF-8"));
+        conn.getOutputStream().flush();
+        conn.getOutputStream().close();
+
+        if (conn.getResponseCode() != 200) {
+            JOptionPane.showMessageDialog(this, "⚠️ Firebase 寫入失敗，請檢查網路或權限。");
+            return;
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "❌ 發生錯誤：" + ex.getMessage());
+        return;
+    }
+
+    // Firebase 寫入成功後建立按鈕
+    for (Map.Entry<String, String> entry : vendorMap.entrySet()) {
+        JButton btn = new JButton("攤位 " + entry.getKey() + " ｜ 密碼：" + entry.getValue());
+        btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        listPanel.add(btn);
+    }
+
+    listPanel.revalidate();
+    listPanel.repaint();
+}
+
 }
