@@ -117,35 +117,35 @@ public class AdminDatabasePanel extends JPanel {
 }
 
 private void deleteAllVendors() {
-    int result = JOptionPane.showConfirmDialog(this, "是否刪除所有攤位帳密與資料？", "確認", JOptionPane.YES_NO_OPTION);
+    int result = JOptionPane.showConfirmDialog(this, "確定要刪除所有攤位帳密與資料？", "警告", JOptionPane.YES_NO_OPTION);
     if (result != JOptionPane.YES_OPTION) return;
 
     try {
-        // 刪除帳密
-        URL accountsUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
-        HttpURLConnection conn1 = (HttpURLConnection) accountsUrl.openConnection();
-        conn1.setRequestMethod("DELETE");
-        int res1 = conn1.getResponseCode();
+        // 🔴 刪除帳密
+        URL accUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+        HttpURLConnection accConn = (HttpURLConnection) accUrl.openConnection();
+        accConn.setRequestMethod("DELETE");
+        int accCode = accConn.getResponseCode();
 
-        // 刪除攤位資料
+        // 🔴 刪除攤販資料
         URL vendorsUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
-        HttpURLConnection conn2 = (HttpURLConnection) vendorsUrl.openConnection();
-        conn2.setRequestMethod("DELETE");
-        int res2 = conn2.getResponseCode();
+        HttpURLConnection vendorsConn = (HttpURLConnection) vendorsUrl.openConnection();
+        vendorsConn.setRequestMethod("DELETE");
+        int vendorsCode = vendorsConn.getResponseCode();
 
-        if (res1 == 200 && res2 == 200) {
+        // ✅ 成功處理
+        if (accCode == 200 && vendorsCode == 200) {
             listPanel.removeAll();
             listPanel.revalidate();
             listPanel.repaint();
-            JOptionPane.showMessageDialog(this, "✅ 所有攤位帳密與資料已刪除！");
+            JOptionPane.showMessageDialog(this, "✅ 所有攤販帳密與資料已成功刪除！");
         } else {
-            JOptionPane.showMessageDialog(this, "❌ 刪除失敗，請檢查網路！");
+            JOptionPane.showMessageDialog(this, "⚠️ 刪除失敗，請檢查網路或 Firebase 權限！");
         }
 
     } catch (Exception ex) {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "刪除時發生錯誤：" + ex.getMessage());
+        JOptionPane.showMessageDialog(this, "❌ 發生錯誤：" + ex.getMessage());
     }
 }
-
 }
