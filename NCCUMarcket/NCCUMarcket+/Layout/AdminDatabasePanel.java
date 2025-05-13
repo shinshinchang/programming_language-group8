@@ -76,15 +76,13 @@ public class AdminDatabasePanel extends JPanel {
     private void addVendorButtons(int count) {
     listPanel.removeAll();
 
-    // Firebase 準備資料
     Map<String, String> vendorMap = new LinkedHashMap<>();
-    for (int i = 0; i < count; i++) {
+    for (int i = 1; i <= count; i++) { // 從 1 開始
         String id = String.format("%02d", i);
         String pw = id + "1234";
         vendorMap.put(id, pw);
     }
 
-    // 寫入 Firebase
     try {
         URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -98,17 +96,16 @@ public class AdminDatabasePanel extends JPanel {
         conn.getOutputStream().close();
 
         if (conn.getResponseCode() != 200) {
-            JOptionPane.showMessageDialog(this, "⚠️ Firebase 寫入失敗，請檢查網路或權限。");
+            JOptionPane.showMessageDialog(this, "Firebase 寫入失敗！");
             return;
         }
-
     } catch (Exception ex) {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "❌ 發生錯誤：" + ex.getMessage());
+        JOptionPane.showMessageDialog(this, "新增時發生錯誤：" + ex.getMessage());
         return;
     }
 
-    // Firebase 寫入成功後建立按鈕
+    // 建立按鈕
     for (Map.Entry<String, String> entry : vendorMap.entrySet()) {
         JButton btn = new JButton("攤位 " + entry.getKey() + " ｜ 密碼：" + entry.getValue());
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -117,6 +114,38 @@ public class AdminDatabasePanel extends JPanel {
 
     listPanel.revalidate();
     listPanel.repaint();
+}
+
+private void deleteAllVendors() {
+    int result = JOptionPane.showConfirmDialog(this, "是否刪除所有攤位帳密與資料？", "確認", JOptionPane.YES_NO_OPTION);
+    if (result != JOptionPane.YES_OPTION) return;
+
+    try {
+        // 刪除帳密
+        URL accountsUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+        HttpURLConnection conn1 = (HttpURLConnection) accountsUrl.openConnection();
+        conn1.setRequestMethod("DELETE");
+        int res1 = conn1.getResponseCode();
+
+        // 刪除攤位資料
+        URL vendorsUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+        HttpURLConnection conn2 = (HttpURLConnection) vendorsUrl.openConnection();
+        conn2.setRequestMethod("DELETE");
+        int res2 = conn2.getResponseCode();
+
+        if (res1 == 200 && res2 == 200) {
+            listPanel.removeAll();
+            listPanel.revalidate();
+            listPanel.repaint();
+            JOptionPane.showMessageDialog(this, "✅ 所有攤位帳密與資料已刪除！");
+        } else {
+            JOptionPane.showMessageDialog(this, "❌ 刪除失敗，請檢查網路！");
+        }
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "刪除時發生錯誤：" + ex.getMessage());
+    }
 }
 
 }
