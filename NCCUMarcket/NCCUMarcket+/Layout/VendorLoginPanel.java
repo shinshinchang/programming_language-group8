@@ -1,13 +1,14 @@
+// ✅ 修正：VendorLoginPanel 登入成功後記得呼叫 frame.setSelectedVendorId(id)
+// ✅ 修正：VendorLoginPanel 登入成功後記得呼叫 frame.setSelectedVendorId(id)
 package Layout;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import javax.swing.*;
 
 public class VendorLoginPanel extends JPanel {
     public JLayeredPane layeredPane;
@@ -54,7 +55,6 @@ public class VendorLoginPanel extends JPanel {
         formPanel.add(idPanel);
         formPanel.add(passwordPanel);
 
-        // ✅ 初始化 loginBtn 並設定事件
         loginBtn = new JButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -76,7 +76,7 @@ public class VendorLoginPanel extends JPanel {
                     reader.close();
 
                     if (password.equals(dbPassword)) {
-                        frame.setSelectedVendorId(id);  // ✅ 儲存攤販ID供後續使用
+                        frame.setSelectedVendorId(id); // ✅ 登入成功後記下這個攤位 ID
                         frame.switchTo("VendorEdit");
                     } else {
                         JOptionPane.showMessageDialog(VendorLoginPanel.this, "帳號或密碼錯誤！");
