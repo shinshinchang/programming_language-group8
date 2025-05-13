@@ -73,7 +73,7 @@ public class AdminDatabasePanel extends JPanel {
         for (int i = 0; i < count; i++) {
             String id = String.format("%02d", i);
             String pw = id + "1234";
-            JButton btn = new JButton("攤位 " + id + " ｜ 密碼：" + pw);
+            JButton btn = new JButton(id + " ｜ 密碼：" + pw);
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             listPanel.add(btn);
             
