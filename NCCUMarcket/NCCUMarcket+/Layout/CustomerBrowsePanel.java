@@ -97,7 +97,8 @@ public class CustomerBrowsePanel extends JPanel {
                     selectedTags.add("時尚穿搭");
                 if (tagOther.isSelected())
                     selectedTags.add("其他");
-                if(!tagEat.isSelected()&&!tagDrink.isSelected()&&!tagCulture.isSelected()&&!tagFashion.isSelected()&&!tagOther.isSelected()){
+                if (!tagEat.isSelected() && !tagDrink.isSelected() && !tagCulture.isSelected()
+                        && !tagFashion.isSelected() && !tagOther.isSelected()) {
                     selectedTags.add("好吃");
                     selectedTags.add("好喝");
                     selectedTags.add("文創");
@@ -162,6 +163,7 @@ public class CustomerBrowsePanel extends JPanel {
         return new VendorButton(frame, vendorId, name, tags); // 預設建立原始 VendorButton
     }
 
+    //
     public class Vendor {
         public String name;
         public String tags;
