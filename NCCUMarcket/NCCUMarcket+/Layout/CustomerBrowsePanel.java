@@ -163,7 +163,6 @@ public class CustomerBrowsePanel extends JPanel {
         return new VendorButton(frame, vendorId, name, tags); // 預設建立原始 VendorButton
     }
 
-    //
     public class Vendor {
         public String name;
         public String tags;
