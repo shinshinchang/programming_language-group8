@@ -23,6 +23,7 @@ public class CustomerBrowsePanel extends JPanel {
     private JScrollPane scrollPane;
 
     public CustomerBrowsePanel(MainFrame frame) {
+        
         this.frame = frame;
         setLayout(new BorderLayout());
 
@@ -86,7 +87,35 @@ public class CustomerBrowsePanel extends JPanel {
 
         filterBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ArrayList<String> selectedTags = new ArrayList<>();
+                filt();
+            }
+        });
+
+        filt();
+    }
+
+    public class VendorButton extends JButton {
+        public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
+            setText(name + " #" + tags);
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+            addActionListener(e -> {
+                frame.switchTo("CustomerDetail");
+                frame.refresh(vendorId);
+            });
+        }
+    }
+
+    protected JButton createVendorButton(String vendorId, String name, String tags) {
+        return new VendorButton(frame, vendorId, name, tags); // 預設建立原始 VendorButton
+    }
+
+    public class Vendor {
+        public String name;
+        public String tags;
+    }
+
+    public void filt(){
+        ArrayList<String> selectedTags = new ArrayList<>();
                 if (tagEat.isSelected())
                     selectedTags.add("好吃");
                 if (tagDrink.isSelected())
@@ -136,27 +165,5 @@ public class CustomerBrowsePanel extends JPanel {
 
                 listPanel.revalidate();
                 listPanel.repaint();
-            }
-        });
-    }
-
-    public class VendorButton extends JButton {
-        public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
-            setText(name + " #" + tags);
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
-            addActionListener(e -> {
-                frame.switchTo("CustomerDetail");
-                frame.refresh(vendorId);
-            });
-        }
-    }
-
-    protected JButton createVendorButton(String vendorId, String name, String tags) {
-        return new VendorButton(frame, vendorId, name, tags); // 預設建立原始 VendorButton
-    }
-
-    public class Vendor {
-        public String name;
-        public String tags;
     }
 }

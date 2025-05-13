@@ -2,13 +2,13 @@
 // ✅ 修正：VendorLoginPanel 登入成功後記得呼叫 frame.setSelectedVendorId(id)
 package Layout;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.swing.*;
 
 public class VendorLoginPanel extends JPanel {
     public JLayeredPane layeredPane;
@@ -87,6 +87,7 @@ public class VendorLoginPanel extends JPanel {
                 }
 
                 clearFields();
+                frame.refresh(id);
             }
         });
 

@@ -154,6 +154,7 @@ public class VendorEditPanel extends JPanel {
         layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
+        
     }
 
     public void clearFields() {

@@ -79,6 +79,8 @@ public class MainFrame extends JFrame {
 
     public void refresh(String id) {
         CustomerDetail.refresh(id);
+        AdminVendorEdit.refresh(id);//偷懶方法
+        VendorEdit.refresh(id);
     }
 
     public void setCustomerNickname(String nickname) {
