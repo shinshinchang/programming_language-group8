@@ -97,6 +97,13 @@ public class CustomerBrowsePanel extends JPanel {
                     selectedTags.add("時尚穿搭");
                 if (tagOther.isSelected())
                     selectedTags.add("其他");
+                if(!tagEat.isSelected()&&!tagDrink.isSelected()&&!tagCulture.isSelected()&&!tagFashion.isSelected()&&!tagOther.isSelected()){
+                    selectedTags.add("好吃");
+                    selectedTags.add("好喝");
+                    selectedTags.add("文創");
+                    selectedTags.add("時尚穿搭");
+                    selectedTags.add("其他");
+                }
 
                 listPanel.removeAll();
 
