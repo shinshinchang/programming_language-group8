@@ -22,6 +22,9 @@ public class AdminDatabasePanel extends JPanel {
     private JScrollPane scrollPane;
     private JButton addVendorBtn, deleteAllBtn, backBtn;
 
+    Map<String, String> vendorMap;
+    Map<String, Object> vendorData;
+
     public AdminDatabasePanel(MainFrame frame) {
         this.frame = frame;
         setLayout(new BorderLayout());
@@ -65,13 +68,18 @@ public class AdminDatabasePanel extends JPanel {
         layeredPane.add(backBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
+
+        vendorMap = new LinkedHashMap<>();
+        vendorData = new LinkedHashMap<>();
+// 初始化時抓資料顯示
+        SwingUtilities.invokeLater(() -> fetchVendorAccounts());
     }
 
     private void addVendorButtons(int count) {
         listPanel.removeAll();
 
-        Map<String, String> vendorMap = new LinkedHashMap<>();
-        Map<String, Object> vendorData = new LinkedHashMap<>();
+        vendorMap.clear();
+        vendorData.clear();
 
         for (int i = 1; i <= count; i++) {
             String id = String.format("%02d", i);
@@ -90,7 +98,8 @@ public class AdminDatabasePanel extends JPanel {
 
         try {
             // ✅ 寫入 vendor_accounts
-            URL accUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+            URL accUrl = new URL(
+                    "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
             HttpURLConnection accConn = (HttpURLConnection) accUrl.openConnection();
             accConn.setRequestMethod("PUT");
             accConn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -114,18 +123,20 @@ public class AdminDatabasePanel extends JPanel {
             BufferedReader reader = new BufferedReader(new InputStreamReader(getConn.getInputStream()));
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) jsonBuilder.append(line);
+            while ((line = reader.readLine()) != null)
+                jsonBuilder.append(line);
             reader.close();
 
             Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Object>>(){}.getType();
+            Type type = new TypeToken<Map<String, Object>>() {
+            }.getType();
             Map<String, Object> currentData = gson.fromJson(jsonBuilder.toString(), type);
-            if (currentData == null) currentData = new LinkedHashMap<>();
+            if (currentData == null)
+                currentData = new LinkedHashMap<>();
 
-            // 合併資料（保留原本的）
-            for (Map.Entry<String, Object> entry : vendorData.entrySet()) {
-                currentData.putIfAbsent(entry.getKey(), entry.getValue());
-            }
+            // ✅ 清空原本的 Firebase vendor 資料後完整覆蓋
+            currentData.clear();
+            currentData.putAll(vendorData);
 
             // 寫入合併後結果
             URL putUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
@@ -163,15 +174,18 @@ public class AdminDatabasePanel extends JPanel {
 
     private void deleteAllVendors() {
         int result = JOptionPane.showConfirmDialog(this, "確定要刪除所有攤位帳密與資料？", "警告", JOptionPane.YES_NO_OPTION);
-        if (result != JOptionPane.YES_OPTION) return;
+        if (result != JOptionPane.YES_OPTION)
+            return;
 
         try {
-            URL accUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+            URL accUrl = new URL(
+                    "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
             HttpURLConnection accConn = (HttpURLConnection) accUrl.openConnection();
             accConn.setRequestMethod("DELETE");
             accConn.getResponseCode();
 
-            URL vendorsUrl = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+            URL vendorsUrl = new URL(
+                    "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
             HttpURLConnection vendorsConn = (HttpURLConnection) vendorsUrl.openConnection();
             vendorsConn.setRequestMethod("DELETE");
             vendorsConn.getResponseCode();
@@ -186,7 +200,39 @@ public class AdminDatabasePanel extends JPanel {
             JOptionPane.showMessageDialog(this, "❌ 發生錯誤：" + ex.getMessage());
         }
     }
+
+    
+
+    private void fetchVendorAccounts() {
+        listPanel.removeAll();
+        try {
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendor_accounts.json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) jsonBuilder.append(line);
+            reader.close();
+
+            Gson gson = new Gson();
+            Type type = new TypeToken<Map<String, String>>() {}.getType();
+            vendorMap = gson.fromJson(jsonBuilder.toString(), type);
+
+            if (vendorMap != null) {
+                for (Map.Entry<String, String> entry : vendorMap.entrySet()) {
+                    JButton btn = new JButton("攤位 " + entry.getKey() + " ｜ 密碼：" + entry.getValue());
+                    btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    listPanel.add(btn);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "❌ 資料載入失敗：" + ex.getMessage());
+        }
+
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
 }
-
-
-

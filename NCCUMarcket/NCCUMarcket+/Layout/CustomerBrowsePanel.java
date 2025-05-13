@@ -72,7 +72,7 @@ public class CustomerBrowsePanel extends JPanel {
         topPanel.add(buttonPanel);
 
         topPanel.setBounds(0, 0, 400, 200);
-        scrollPane.setBounds(0, 200, 400, 360);
+        scrollPane.setBounds(0, 200, 400, 450);
 
         layeredPane.add(topPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
@@ -99,8 +99,9 @@ public class CustomerBrowsePanel extends JPanel {
 
     public class VendorButton extends JButton {
         public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
-            setText(name + " #" + tags);
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+            setText(vendorId + ". " + name + " #" + tags);
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+            setPreferredSize(new Dimension(0, 100));
             addActionListener(e -> {
                 frame.switchTo("CustomerDetail");
                 frame.refresh(vendorId);
