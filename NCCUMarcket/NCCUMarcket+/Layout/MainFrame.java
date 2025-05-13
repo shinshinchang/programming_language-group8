@@ -37,7 +37,9 @@ public class MainFrame extends JFrame {
         AdminDatabase = new AdminDatabasePanel(this);
         AdminVendorEdit = new AdminVendorEditPanel(this);
         Login = new LoginPanel(this);
-
+        AdminDatabase = new AdminDatabasePanel(this);
+        
+        mainPanel.add(AdminDatabase, "AdminDatabase");
         mainPanel.add(VendorLogin, "VendorLogin");
         mainPanel.add(VendorEdit, "VendorEdit");
         mainPanel.add(CustomerLogin, "CustomerLogin");
