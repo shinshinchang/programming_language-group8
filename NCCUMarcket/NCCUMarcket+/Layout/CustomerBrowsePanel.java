@@ -23,7 +23,7 @@ public class CustomerBrowsePanel extends JPanel {
     private JScrollPane scrollPane;
 
     public CustomerBrowsePanel(MainFrame frame) {
-        
+
         this.frame = frame;
         setLayout(new BorderLayout());
 
@@ -37,8 +37,8 @@ public class CustomerBrowsePanel extends JPanel {
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
 
-        tagEat = new JCheckBox("#好吃", true);
-        tagDrink = new JCheckBox("#好喝", true);
+        tagEat = new JCheckBox("#好吃");
+        tagDrink = new JCheckBox("#好喝");
         tagCulture = new JCheckBox("#文創");
         tagFashion = new JCheckBox("#時尚穿搭");
         tagOther = new JCheckBox("#其他");
@@ -80,7 +80,10 @@ public class CustomerBrowsePanel extends JPanel {
         absoluteBackBtn = new JButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
-        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        absoluteBackBtn.addActionListener(e -> {
+            frame.switchTo("Login");
+            cleanField();
+        });
         layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
@@ -114,56 +117,68 @@ public class CustomerBrowsePanel extends JPanel {
         public String tags;
     }
 
-    public void filt(){
+    public void filt() {
         ArrayList<String> selectedTags = new ArrayList<>();
-                if (tagEat.isSelected())
-                    selectedTags.add("好吃");
-                if (tagDrink.isSelected())
-                    selectedTags.add("好喝");
-                if (tagCulture.isSelected())
-                    selectedTags.add("文創");
-                if (tagFashion.isSelected())
-                    selectedTags.add("時尚穿搭");
-                if (tagOther.isSelected())
-                    selectedTags.add("其他");
+        if (tagEat.isSelected())
+            selectedTags.add("好吃");
+        if (tagDrink.isSelected())
+            selectedTags.add("好喝");
+        if (tagCulture.isSelected())
+            selectedTags.add("文創");
+        if (tagFashion.isSelected())
+            selectedTags.add("時尚穿搭");
+        if (tagOther.isSelected())
+            selectedTags.add("其他");
 
-                listPanel.removeAll();
+        boolean showAll = selectedTags.isEmpty(); // ✅ 若沒勾任何一個，就顯示全部
 
-                try {
-                    URL url = new URL(
-                            "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
+        listPanel.removeAll();
 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    StringBuilder content = new StringBuilder();
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        content.append(inputLine);
+        try {
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder content = new StringBuilder();
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+
+            Gson gson = new Gson();
+            Type mapType = new TypeToken<Map<String, Vendor>>() {
+            }.getType();
+            Map<String, Vendor> vendorMap = gson.fromJson(content.toString(), mapType);
+
+            if (vendorMap != null) {
+                for (Map.Entry<String, Vendor> entry : vendorMap.entrySet()) {
+                    Vendor vendor = entry.getValue();
+                    if (vendor.tags == null)
+                        continue;
+
+                    boolean match = showAll || selectedTags.stream().anyMatch(t -> vendor.tags.contains(t));
+
+                    if (match) {
+                        listPanel.add(createVendorButton(entry.getKey(), vendor.name, vendor.tags));
                     }
-                    in.close();
-
-                    Gson gson = new Gson();
-                    Type mapType = new TypeToken<Map<String, Vendor>>() {
-                    }.getType();
-                    Map<String, Vendor> vendorMap = gson.fromJson(content.toString(), mapType);
-
-                    for (Map.Entry<String, Vendor> entry : vendorMap.entrySet()) {
-                        Vendor vendor = entry.getValue();
-                        if (vendor.tags == null)
-                            continue;
-                        String lowerTag = vendor.tags.toLowerCase();
-                        boolean match = selectedTags.stream().anyMatch(t -> lowerTag.contains(t));
-                        if (match) {
-                            listPanel.add(createVendorButton(entry.getKey(), vendor.name, vendor.tags));
-                        }
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(CustomerBrowsePanel.this, "資料載入失敗: " + ex.getMessage());
                 }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(CustomerBrowsePanel.this, "資料載入失敗: " + ex.getMessage());
+        }
 
-                listPanel.revalidate();
-                listPanel.repaint();
+        listPanel.revalidate();
+        listPanel.repaint();
+    }
+
+    public void cleanField() {
+        tagEat.setSelected(false);
+        tagDrink.setSelected(false);
+        tagCulture.setSelected(false);
+        tagFashion.setSelected(false);
+        tagOther.setSelected(false);
     }
 }
