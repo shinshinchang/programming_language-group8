@@ -106,7 +106,7 @@ public class CustomerDetailPanel extends VendorEditPanel {
         commentsPanel.repaint();
     }
 
-    // === 提交留言到 Firebase ===
+    // === 提交留言到 Firebase ===//
     private void submitComment() {
         String comment = commentInput.getText().trim();
         if (comment.isEmpty())
