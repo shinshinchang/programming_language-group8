@@ -96,8 +96,8 @@ public class VendorEditPanel extends JPanel {
 
                     String tags = tagsBuilder.toString().trim();
 
-                    String json = String.format("{\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
-                            name, tags, description, contact, supportPay);
+                    String json = String.format("{\"record_id\":\"%s\",\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
+                            id, name, tags, description, contact, supportPay);
 
                     URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -163,7 +163,7 @@ public class VendorEditPanel extends JPanel {
     }
 
     public void refresh(String id) {
-        try {
+       try {
             URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -175,18 +175,21 @@ public class VendorEditPanel extends JPanel {
             Map<String, Object> vendor = gson.fromJson(reader, type);
             reader.close();
 
-            stallIdField.setText(id);
+            // 顯示 vendor recordId（紀錄編號）
+            String recordId = (String) vendor.get("record_id");
+            stallIdField.setText(recordId != null ? recordId : id);
+
             nameField.setText((String) vendor.get("name"));
             contactField.setText((String) vendor.get("contact_info"));
             promoArea.setText((String) vendor.get("description"));
 
             // 標籤處理
             String tags = (String) vendor.get("tags");
-            eatTag.setSelected(tags.contains("好吃"));
-            drinkTag.setSelected(tags.contains("好喝"));
-            cultureTag.setSelected(tags.contains("文創"));
-            fashionTag.setSelected(tags.contains("穿搭時尚"));
-            otherTag.setSelected(tags.contains("其他"));
+            eatTag.setSelected(tags != null && tags.contains("好吃"));
+            drinkTag.setSelected(tags != null && tags.contains("好喝"));
+            cultureTag.setSelected(tags != null && tags.contains("文創"));
+            fashionTag.setSelected(tags != null && tags.contains("穿搭時尚"));
+            otherTag.setSelected(tags != null && tags.contains("其他"));
 
             // 支援付款方式
             Object mobile = vendor.get("support_mobile_payment");
