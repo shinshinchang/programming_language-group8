@@ -64,6 +64,15 @@ public class MainFrame extends JFrame {
     public void switchTo(String panelName) {
         layout.show(mainPanel, panelName);
         System.out.println(panelName);
+        if (panelName == "CustomerBrowse") {
+            CustomerBrowse.filt();
+
+        }
+        if (panelName == "AdminBrowse") {
+
+            AdminBrowse.filt();
+        }
+
     }
 
     public void setSelectedVendorId(String id) {
@@ -79,7 +88,7 @@ public class MainFrame extends JFrame {
 
     public void refresh(String id) {
         CustomerDetail.refresh(id);
-        AdminVendorEdit.refresh(id);//偷懶方法
+        AdminVendorEdit.refresh(id);// 偷懶方法
         VendorEdit.refresh(id);
     }
 
