@@ -1,3 +1,4 @@
+// ✅ 修正：MainFrame 初始化時延後建立 VendorEditPanel，並在登入後設定 selectedVendorId
 package Layout;
 
 import java.awt.CardLayout;
@@ -10,7 +11,7 @@ public class MainFrame extends JFrame {
     JPanel mainPanel;
 
     VendorLoginPanel VendorLogin;
-    VendorEditPanel VendorEdit;
+    VendorEditPanel VendorEdit; // 延後初始化
     CustomerLoginPanel CustomerLogin;
     CustomerBrowsePanel CustomerBrowse;
     CustomerDetailPanel CustomerDetail;
@@ -21,13 +22,11 @@ public class MainFrame extends JFrame {
     AdminVendorEditPanel AdminVendorEdit;
     LoginPanel Login;
 
-
     public MainFrame() {
         layout = new CardLayout();
         mainPanel = new JPanel(layout);
 
         VendorLogin = new VendorLoginPanel(this);
-        VendorEdit = new VendorEditPanel(this);
         CustomerLogin = new CustomerLoginPanel(this);
         CustomerBrowse = new CustomerBrowsePanel(this);
         CustomerDetail = new CustomerDetailPanel(this);
@@ -37,9 +36,10 @@ public class MainFrame extends JFrame {
         AdminDatabase = new AdminDatabasePanel(this);
         AdminVendorEdit = new AdminVendorEditPanel(this);
         Login = new LoginPanel(this);
-        AdminDatabase = new AdminDatabasePanel(this);
-        
-        mainPanel.add(AdminDatabase, "AdminDatabase");
+
+        // 延後初始化 VendorEditPanel（在 setSelectedVendorId 時再補）
+        VendorEdit = new VendorEditPanel(this);
+
         mainPanel.add(VendorLogin, "VendorLogin");
         mainPanel.add(VendorEdit, "VendorEdit");
         mainPanel.add(CustomerLogin, "CustomerLogin");
@@ -47,10 +47,10 @@ public class MainFrame extends JFrame {
         mainPanel.add(CustomerDetail, "CustomerDetail");
         mainPanel.add(AdminLogin, "AdminLogin");
         mainPanel.add(AdminEdit, "AdminEdit");
+        mainPanel.add(AdminBrowse, "AdminBrowse");
+        mainPanel.add(AdminDatabase, "AdminDatabase");
+        mainPanel.add(AdminVendorEdit, "AdminVendorEdit");
         mainPanel.add(Login, "Login");
-        mainPanel.add(AdminBrowse , "AdminBrowse");
-        // mainPanel.add(AdminDatabase, "AdminDatabase");
-        mainPanel.add( AdminVendorEdit, "AdminVendorEdit");
 
         add(mainPanel);
         layout.show(mainPanel, "Login");
@@ -59,7 +59,6 @@ public class MainFrame extends JFrame {
         setSize(405, 720);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-
     }
 
     public void switchTo(String panelName) {
@@ -69,6 +68,9 @@ public class MainFrame extends JFrame {
 
     public void setSelectedVendorId(String id) {
         this.selectedVendorId = id;
+        if (VendorEdit != null) {
+            VendorEdit.stallIdField.setText(id); // 即時同步到輸入欄
+        }
     }
 
     public String getSelectedVendorId() {
@@ -78,12 +80,12 @@ public class MainFrame extends JFrame {
     public void refresh(String id) {
         CustomerDetail.refresh(id);
     }
-    public void setCustomerNickname(String nickname){
-        this.customerNickname=nickname;
+
+    public void setCustomerNickname(String nickname) {
+        this.customerNickname = nickname;
     }
-    public String getCustomerNickname(){
+
+    public String getCustomerNickname() {
         return customerNickname;
     }
-
 }
-
