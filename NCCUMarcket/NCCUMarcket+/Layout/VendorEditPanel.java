@@ -1,3 +1,4 @@
+// ✅ 修正：VendorEditPanel 初始化帶入 stallId，避免 Firebase 空寫入
 package Layout;
 
 import java.awt.*;
@@ -28,8 +29,10 @@ public class VendorEditPanel extends JPanel {
     public JButton submitBtn;
     public JPanel bottomPanel;
     public JPanel titlePanel;
+    private MainFrame frame;
 
     public VendorEditPanel(MainFrame frame) {
+        this.frame = frame;
         setLayout(new BorderLayout());
 
         layeredPane = new JLayeredPane();
@@ -43,6 +46,8 @@ public class VendorEditPanel extends JPanel {
 
         stallIdField = new JTextField();
         stallIdField.setEditable(false);
+        stallIdField.setText(frame.getSelectedVendorId()); // ✅ 從登入者帶入 ID
+
         nameField = new JTextField();
 
         eatTag = new JCheckBox("好吃");
@@ -57,10 +62,8 @@ public class VendorEditPanel extends JPanel {
 
         formPanel.add(new JLabel("攤位編號："));
         formPanel.add(stallIdField);
-        
         formPanel.add(new JLabel("名稱："));
         formPanel.add(nameField);
-
         formPanel.add(new JLabel("攤販標籤："));
         JPanel tagPanel = new JPanel();
         tagPanel.add(eatTag);
@@ -69,7 +72,6 @@ public class VendorEditPanel extends JPanel {
         tagPanel.add(fashionTag);
         tagPanel.add(otherTag);
         formPanel.add(tagPanel);
-
         formPanel.add(new JLabel("文宣內容/連結："));
         formPanel.add(new JScrollPane(promoArea));
         formPanel.add(new JLabel("聯絡方式："));
@@ -79,11 +81,15 @@ public class VendorEditPanel extends JPanel {
 
         submitBtn = new JButton("更新資料");
         submitBtn.setForeground(Color.BLACK);
-
         submitBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String id = stallIdField.getText();
+                    String id = stallIdField.getText().trim();
+                    if (id.isEmpty()) {
+                        JOptionPane.showMessageDialog(VendorEditPanel.this, "錯誤：找不到攤位編號！");
+                        return;
+                    }
+
                     String name = nameField.getText();
                     String description = promoArea.getText();
                     String contact = contactField.getText();
@@ -101,9 +107,9 @@ public class VendorEditPanel extends JPanel {
                     String json = String.format("{\"record_id\":\"%s\",\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
                             id, name, tags, description, contact, supportPay);
 
-                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors.json");
+                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
+                    conn.setRequestMethod("PUT");
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                     conn.setDoOutput(true);
 
@@ -114,8 +120,7 @@ public class VendorEditPanel extends JPanel {
 
                     int responseCode = conn.getResponseCode();
                     if (responseCode == 200) {
-                        JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功新增資料到 Firebase！");
-                        
+                        JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功更新資料到 Firebase！");
                     } else {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
                     }
@@ -165,7 +170,9 @@ public class VendorEditPanel extends JPanel {
     }
 
     public void refresh(String id) {
-       try {
+        try {
+            stallIdField.setText(id); // ✅ 同步設定 ID
+
             URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -177,15 +184,10 @@ public class VendorEditPanel extends JPanel {
             Map<String, Object> vendor = gson.fromJson(reader, type);
             reader.close();
 
-            // 顯示 vendor recordId（紀錄編號）
-            String recordId = (String) vendor.get("record_id");
-            stallIdField.setText(recordId != null ? recordId : id);
-
             nameField.setText((String) vendor.get("name"));
             contactField.setText((String) vendor.get("contact_info"));
             promoArea.setText((String) vendor.get("description"));
 
-            // 標籤處理
             String tags = (String) vendor.get("tags");
             eatTag.setSelected(tags != null && tags.contains("好吃"));
             drinkTag.setSelected(tags != null && tags.contains("好喝"));
@@ -193,7 +195,6 @@ public class VendorEditPanel extends JPanel {
             fashionTag.setSelected(tags != null && tags.contains("穿搭時尚"));
             otherTag.setSelected(tags != null && tags.contains("其他"));
 
-            // 支援付款方式
             Object mobile = vendor.get("support_mobile_payment");
             mobilePay.setSelected(mobile instanceof Boolean && (Boolean) mobile);
 
@@ -203,3 +204,4 @@ public class VendorEditPanel extends JPanel {
         }
     }
 }
+
