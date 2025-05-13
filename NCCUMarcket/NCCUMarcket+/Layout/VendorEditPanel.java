@@ -113,7 +113,7 @@ public class VendorEditPanel extends JPanel {
                     int responseCode = conn.getResponseCode();
                     if (responseCode == 200) {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功新增資料到 Firebase！");
-                        clearFields();
+                        
                     } else {
                         JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
                     }
