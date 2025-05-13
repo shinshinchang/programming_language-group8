@@ -12,6 +12,7 @@ public class CustomerDetailPanel extends VendorEditPanel {
         }
         absoluteBackBtn.addActionListener(e -> frame.switchTo("CustomerBrowse"));
 
+        super.title.setText("商家瀏覽頁面");        
         super.stallIdField.setEditable(false);
 
         super.nameField.setEditable(false);
