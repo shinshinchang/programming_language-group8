@@ -35,7 +35,8 @@ public class CustomerDetailPanel extends VendorEditPanel {
         super.submitBtn.setVisible(false);
 
         // 顧客留言按鈕
-        JButton commentButton = new JButton("我要留言");
+        JButton commentButton = new StyledButton("我要留言");
+
         commentButton.setPreferredSize(new Dimension(300, 30));
         super.bottomPanel.add(commentButton);
 
@@ -108,5 +109,4 @@ public class CustomerDetailPanel extends VendorEditPanel {
         }
     }
 
-} 
-     
+}  

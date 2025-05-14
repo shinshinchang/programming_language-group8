@@ -52,7 +52,8 @@ public class CustomerBrowsePanel extends JPanel {
         filterPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         filterPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, filterPanel.getPreferredSize().height));
 
-        filterBtn = new JButton("篩選商家");
+        
+        filterBtn = new StyledButton("篩選商家");
         filterBtn.setPreferredSize(new Dimension(150, 30));
         buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.add(filterBtn);
