@@ -29,7 +29,7 @@ public class VendorLoginPanel extends JPanel {
         layeredPane.setLayout(null);
         layeredPane.setPreferredSize(new Dimension(400, 600));
 
-        title = new JLabel("攤販登入介面", SwingConstants.CENTER);
+        title = new JLabel("攤販登入", SwingConstants.CENTER);
         title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 30));
 
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

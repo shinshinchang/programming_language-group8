@@ -26,8 +26,8 @@ public class AdminLoginPanel extends JPanel {
         layeredPane.setLayout(null);
 
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        title = new JLabel("管理者登入介面");
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title = new JLabel("管理者登入", SwingConstants.CENTER);
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 30));
         titlePanel.add(title);
 
         formPanel = new JPanel();
@@ -36,14 +36,14 @@ public class AdminLoginPanel extends JPanel {
 
         passwordPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         passwordLabel = new JLabel("密碼：");
+        passwordLabel.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 18));
         passwordField = new JPasswordField(15);
         passwordField.setPreferredSize(new Dimension(150, 30));
         passwordPanel.add(passwordLabel);
         passwordPanel.add(passwordField);
-
         formPanel.add(passwordPanel);
 
-        loginBtn = new JButton("登入");
+        loginBtn = new StyledButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 inputPassword = new String(passwordField.getPassword());
@@ -61,14 +61,14 @@ public class AdminLoginPanel extends JPanel {
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         bottomPanel.add(loginBtn);
 
-        titlePanel.setBounds(0, 0, 400, 60);
+        titlePanel.setBounds(0, 70, 400, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
-        formPanel.setBounds(0, 80, 400, 120);
+        formPanel.setBounds(0, 160, 400, 120);
         layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
-        bottomPanel.setBounds(0, 220, 400, 60);
+        bottomPanel.setBounds(0, 280, 400, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
-        absoluteBackBtn = new JButton("←");
+        absoluteBackBtn = new StyledButton("←");
         absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> {

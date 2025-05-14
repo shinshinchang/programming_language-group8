@@ -23,7 +23,7 @@ public class CustomerLoginPanel extends JPanel {
         layeredPane.setPreferredSize(new Dimension(400, 600));
 
         // 標題區
-        title = new JLabel("顧客登入介面", SwingConstants.CENTER);
+        title = new JLabel("顧客登入", SwingConstants.CENTER);
         title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 30));
 
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

@@ -20,7 +20,7 @@ public class AdminDatabasePanel extends JPanel {
     private JLabel title;
     private JPanel titlePanel, listPanel;
     private JScrollPane scrollPane;
-    private JButton addVendorBtn, deleteAllBtn, backBtn;
+    private StyledButton addVendorBtn, deleteAllBtn, backBtn;
 
     Map<String, String> vendorMap;
     Map<String, Object> vendorData;
@@ -33,19 +33,19 @@ public class AdminDatabasePanel extends JPanel {
         layeredPane.setLayout(null);
 
         title = new JLabel("攤販帳號管理", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 28));
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
-        titlePanel.setBounds(0, 0, 400, 60);
+        titlePanel.setBounds(0, 10, 400, 60);
         layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
 
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         scrollPane = new JScrollPane(listPanel);
-        scrollPane.setBounds(0, 60, 400, 480);
+        scrollPane.setBounds(0, 70, 400, 470);
         layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
-        addVendorBtn = new JButton("➕ 新增攤位");
+        addVendorBtn = new StyledButton("新增攤位");
         addVendorBtn.setBounds(50, 560, 140, 40);
         addVendorBtn.addActionListener(e -> {
             String input = JOptionPane.showInputDialog(this, "輸入要新增的攤位數量：");
@@ -56,14 +56,15 @@ public class AdminDatabasePanel extends JPanel {
         });
         layeredPane.add(addVendorBtn, JLayeredPane.DEFAULT_LAYER);
 
-        deleteAllBtn = new JButton("🗑 刪除攤位");
+        deleteAllBtn = new StyledButton("刪除攤位");
         deleteAllBtn.setBounds(210, 560, 140, 40);
         deleteAllBtn.addActionListener(e -> deleteAllVendors());
         layeredPane.add(deleteAllBtn, JLayeredPane.DEFAULT_LAYER);
 
-        backBtn = new JButton("←");
+        backBtn = new StyledButton("←");
+        backBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        backBtn.setPreferredSize(new Dimension(50, 30));
         backBtn.setBounds(10, 10, 50, 30);
-        backBtn.setMargin(new Insets(2, 6, 2, 6));
         backBtn.addActionListener(e -> frame.switchTo("AdminEdit"));
         layeredPane.add(backBtn, JLayeredPane.PALETTE_LAYER);
 
@@ -71,7 +72,6 @@ public class AdminDatabasePanel extends JPanel {
 
         vendorMap = new LinkedHashMap<>();
         vendorData = new LinkedHashMap<>();
-// 初始化時抓資料顯示
         SwingUtilities.invokeLater(() -> fetchVendorAccounts());
     }
 
