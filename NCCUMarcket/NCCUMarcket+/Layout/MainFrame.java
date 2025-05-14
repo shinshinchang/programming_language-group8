@@ -76,8 +76,15 @@ public class MainFrame extends JFrame {
     }
 
     public void refresh(String id) {
-        CustomerDetail.refresh(id);
+        if (VendorEdit.isShowing()) {
+            VendorEdit.refresh(id);
+        } else if (AdminVendorEdit.isShowing()) {
+            AdminVendorEdit.refresh(id);
+        } else if (CustomerDetail.isShowing()) {
+            CustomerDetail.refresh(id);
+        }
     }
+
     public void setCustomerNickname(String nickname){
         this.customerNickname=nickname;
     }
