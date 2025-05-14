@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import Layout.StyledButton;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,16 +33,22 @@ public class CustomerBrowsePanel extends JPanel {
         layeredPane.setPreferredSize(new Dimension(400, 600));
 
         title = new JLabel("商家列表", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 26));
 
         titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         titlePanel.add(title);
 
-        tagEat = new JCheckBox("#好吃");
-        tagDrink = new JCheckBox("#好喝");
-        tagCulture = new JCheckBox("#文創");
-        tagFashion = new JCheckBox("#時尚穿搭");
-        tagOther = new JCheckBox("#其他");
+        tagEat = new JCheckBox("好吃");
+        tagDrink = new JCheckBox("好喝");
+        tagCulture = new JCheckBox("文創");
+        tagFashion = new JCheckBox("時尚穿搭");
+        tagOther = new JCheckBox("其他");
+
+        tagEat.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
+        tagDrink.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
+        tagCulture.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
+        tagFashion.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
+        tagOther.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
 
         filterPanel = new JPanel(new FlowLayout());
         filterPanel.add(tagEat);
@@ -78,14 +85,16 @@ public class CustomerBrowsePanel extends JPanel {
         layeredPane.add(topPanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(scrollPane, JLayeredPane.DEFAULT_LAYER);
 
-        absoluteBackBtn = new JButton("←");
-        absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
+        absoluteBackBtn = new StyledButton("←");
+        absoluteBackBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        absoluteBackBtn.setPreferredSize(new Dimension(50, 30));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> {
-            frame.switchTo("Login");
-            cleanField();
+        frame.switchTo("Login");
+        cleanField();
         });
         layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
+
 
         add(layeredPane, BorderLayout.CENTER);
 

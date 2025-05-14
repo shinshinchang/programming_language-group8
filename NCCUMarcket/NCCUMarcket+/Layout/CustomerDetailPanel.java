@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 public class CustomerDetailPanel extends VendorEditPanel {
     // private JPanel commentDisplayPanel;
 
+    StyledButton absoluteBackBtn = new StyledButton("←");
+
     public CustomerDetailPanel(MainFrame frame) {
         super(frame);
         for (ActionListener al : absoluteBackBtn.getActionListeners()) {

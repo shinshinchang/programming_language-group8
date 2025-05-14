@@ -11,25 +11,52 @@ public class CustomerLoginPanel extends JPanel {
     private JLayeredPane layeredPane;
     private JTextField nicknameField;
     private StyledButton loginBtn;
-    private JPanel formPanel, bottomPanel, titlePanel;
+    private StyledButton absoluteBackBtn;
+    private JPanel titlePanel, formPanel, bottomPanel;
     private JLabel title;
-    private JButton absoluteBackBtn;
 
     public CustomerLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
+        layeredPane.setPreferredSize(new Dimension(400, 600));
 
+        // 標題區
         title = new JLabel("顧客登入介面", SwingConstants.CENTER);
-        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 28));
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 30));
 
+        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBounds(0, 100, 400, 60);
+        titlePanel.add(title);
+        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
+
+        // 輸入欄位區
         formPanel = new JPanel(new FlowLayout());
-        formPanel.add(new JLabel("輸入暱稱："));
+        JLabel nicknameLabel = new JLabel("輸入暱稱：");
+        nicknameLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 18));
         nicknameField = new JTextField(20);
+        formPanel.add(nicknameLabel);
         formPanel.add(nicknameField);
+        formPanel.setBounds(0, 180, 400, 60);
+        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
 
+        // 登入按鈕區
         loginBtn = new StyledButton("登入");
+        bottomPanel = new JPanel();
+        bottomPanel.add(loginBtn);
+        bottomPanel.setBounds(0, 250, 400, 60);
+        layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
+
+        // 返回鍵也使用 StyledButton，小尺寸
+        absoluteBackBtn = new StyledButton("←");
+        absoluteBackBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        absoluteBackBtn.setPreferredSize(new Dimension(50, 30));
+        absoluteBackBtn.setBounds(10, 10, 50, 30);
+        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
+        layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
+
+        // 登入邏輯
         loginBtn.addActionListener(e -> {
             String nickname = nicknameField.getText().trim();
             if (nickname.isEmpty()) {
@@ -64,25 +91,6 @@ public class CustomerLoginPanel extends JPanel {
             clearFields();
             frame.switchTo("CustomerBrowse");
         });
-
-        bottomPanel = new JPanel();
-        bottomPanel.add(loginBtn);
-
-        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        titlePanel.add(title);
-        titlePanel.setBounds(0, 0, 405, 60);
-        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
-
-        formPanel.setBounds(0, 60, 405, 100);
-        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
-
-        bottomPanel.setBounds(0, 160, 405, 60);
-        layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
-
-        absoluteBackBtn = new JButton("←");
-        absoluteBackBtn.setBounds(10, 10, 50, 30);
-        absoluteBackBtn.addActionListener(e -> frame.switchTo("Login"));
-        layeredPane.add(absoluteBackBtn, JLayeredPane.PALETTE_LAYER);
 
         add(layeredPane, BorderLayout.CENTER);
     }
