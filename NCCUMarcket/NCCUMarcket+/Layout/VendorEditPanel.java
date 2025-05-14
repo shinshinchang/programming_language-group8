@@ -1,4 +1,4 @@
-// ✅ 修正：VendorEditPanel 初始化帶入 stallId，避免 Firebase 空寫入，並加入評論區，整體容器改為 ScrollPane 可滑動全頁
+// ✅ 美化後的 VendorLoginPanel 與 VendorEditPanel，含 StyledButton、字體與版面調整
 package Layout;
 
 import java.awt.*;
@@ -21,7 +21,7 @@ public class VendorEditPanel extends JPanel {
     protected JPanel contentPanel;
     private JScrollPane scrollPane;
 
-    public JButton absoluteBackBtn;
+    public StyledButton absoluteBackBtn;
     public JLabel title;
     public JPanel formPanel;
     public JTextField stallIdField;
@@ -30,7 +30,7 @@ public class VendorEditPanel extends JPanel {
     public JTextArea promoArea;
     public JTextField contactField;
     public JCheckBox mobilePay;
-    public JButton submitBtn;
+    public StyledButton submitBtn;
     public JPanel bottomPanel;
     public JPanel titlePanel;
 
@@ -41,7 +41,6 @@ public class VendorEditPanel extends JPanel {
         this.frame = frame;
         setLayout(new BorderLayout());
 
-        // 用 contentPanel 包覆所有元件，並外層包 ScrollPane
         contentPanel = new JPanel();
         contentPanel.setLayout(null);
         contentPanel.setPreferredSize(new Dimension(400, 900));
@@ -51,7 +50,7 @@ public class VendorEditPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
 
         title = new JLabel("攤販資料更新", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 28));
 
         formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
@@ -71,11 +70,22 @@ public class VendorEditPanel extends JPanel {
         contactField = new JTextField();
         mobilePay = new JCheckBox("是否支援行動支付");
 
-        formPanel.add(new JLabel("攤位編號："));
+        JLabel idLabel = new JLabel("攤位編號：");
+        idLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(idLabel);
+
         formPanel.add(stallIdField);
-        formPanel.add(new JLabel("名稱："));
+        
+        JLabel nameLabel = new JLabel("名稱：");
+        nameLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(nameLabel);
+
         formPanel.add(nameField);
-        formPanel.add(new JLabel("攤販標籤："));
+
+        JLabel sellLabel = new JLabel("攤販標籤：");
+        sellLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(sellLabel);
+
         JPanel tagPanel = new JPanel();
         tagPanel.setBounds(10, 60, 360, 200);
         tagPanel.add(eatTag);
@@ -84,18 +94,30 @@ public class VendorEditPanel extends JPanel {
         tagPanel.add(fashionTag);
         tagPanel.add(otherTag);
         formPanel.add(tagPanel);
-        formPanel.add(new JLabel("文宣內容/連結："));
+
+        JLabel textLabel = new JLabel("文宣內容/連結：");
+        textLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(textLabel);
+
         formPanel.add(new JScrollPane(promoArea));
-        formPanel.add(new JLabel("聯絡方式："));
+        
+        JLabel callLabel = new JLabel("聯絡方式：");
+        callLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(callLabel);
+
         formPanel.add(contactField);
-        formPanel.add(new JLabel("付款方式："));
+
+        JLabel payLabel = new JLabel("付款方式：");
+        payLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 16));
+        formPanel.add(payLabel);
+        
         formPanel.add(mobilePay);
+
 
         formPanel.setBounds(10, 60, 360, 400);
         contentPanel.add(formPanel);
 
-        submitBtn = new JButton("更新資料");
-        submitBtn.setForeground(Color.BLACK);
+        submitBtn = new StyledButton("更新資料");
         submitBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -110,25 +132,19 @@ public class VendorEditPanel extends JPanel {
                     boolean supportPay = mobilePay.isSelected();
 
                     StringBuilder tagsBuilder = new StringBuilder();
-                    if (eatTag.isSelected())
-                        tagsBuilder.append("好吃 ");
-                    if (drinkTag.isSelected())
-                        tagsBuilder.append("好喝 ");
-                    if (cultureTag.isSelected())
-                        tagsBuilder.append("文創 ");
-                    if (fashionTag.isSelected())
-                        tagsBuilder.append("穿搭時尚 ");
-                    if (otherTag.isSelected())
-                        tagsBuilder.append("其他 ");
+                    if (eatTag.isSelected()) tagsBuilder.append("好吃");
+                    if (drinkTag.isSelected()) tagsBuilder.append("好喝");
+                    if (cultureTag.isSelected()) tagsBuilder.append("文創");
+                    if (fashionTag.isSelected()) tagsBuilder.append("穿搭時尚");
+                    if (otherTag.isSelected()) tagsBuilder.append("其他");
 
                     String tags = tagsBuilder.toString().trim();
 
                     String json = String.format(
-                            "{\"record_id\":\"%s\",\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
-                            id, name, tags, description, contact, supportPay);
+                        "{\"record_id\":\"%s\",\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
+                        id, name, tags, description, contact, supportPay);
 
-                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/"
-                            + id + ".json");
+                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("PUT");
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -153,23 +169,23 @@ public class VendorEditPanel extends JPanel {
         });
 
         bottomPanel = new JPanel();
-        bottomPanel.setBounds(10, 470, 360, 40);
+        bottomPanel.setBounds(10, 470, 360, 50);
         bottomPanel.add(submitBtn);
         contentPanel.add(bottomPanel);
 
-        // 🔽 顧客評論顯示區（取代新增區塊）
         commentPanel = new JPanel();
         commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.Y_AXIS));
         commentPanel.setBounds(10, 540, 360, 300);
         commentTitle = new JLabel("顧客評價");
+        commentTitle.setFont(new Font("Microsoft JhengHei", Font.BOLD, 18));
         commentPanel.add(commentTitle);
         contentPanel.add(commentPanel);
 
-        // 讀取評論區塊
         refreshComments(stallIdField.getText());
 
-        // 🔼 返回鍵
-        absoluteBackBtn = new JButton("←");
+        absoluteBackBtn = new StyledButton("←");
+        absoluteBackBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        absoluteBackBtn.setPreferredSize(new Dimension(50, 30));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> {
             clearFields();
@@ -177,7 +193,6 @@ public class VendorEditPanel extends JPanel {
         });
         contentPanel.add(absoluteBackBtn);
 
-        // 標題
         titlePanel = new JPanel();
         titlePanel.setBounds(60, 10, 280, 40);
         titlePanel.add(title);
@@ -200,15 +215,13 @@ public class VendorEditPanel extends JPanel {
     public void refresh(String id) {
         try {
             stallIdField.setText(id);
-            URL url = new URL(
-                    "https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type", "application/json");
             InputStreamReader reader = new InputStreamReader(conn.getInputStream());
             Gson gson = new Gson();
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
+            Type type = new TypeToken<Map<String, Object>>() {}.getType();
             Map<String, Object> vendor = gson.fromJson(reader, type);
             reader.close();
 
@@ -233,16 +246,14 @@ public class VendorEditPanel extends JPanel {
     public void refreshComments(String id) {
         commentPanel.removeAll();
         try {
-            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id
-                    + "/comments.json");
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + "/comments.json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Content-Type", "application/json");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             Gson gson = new Gson();
-            java.lang.reflect.Type type = new TypeToken<Map<String, Map<String, Object>>>() {
-            }.getType();
+            java.lang.reflect.Type type = new TypeToken<Map<String, Map<String, Object>>>() {}.getType();
             Map<String, Map<String, Object>> comments = gson.fromJson(reader, type);
             reader.close();
 

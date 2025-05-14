@@ -1,5 +1,4 @@
-// ✅ 修正：VendorLoginPanel 登入成功後記得呼叫 frame.setSelectedVendorId(id)
-// ✅ 修正：VendorLoginPanel 登入成功後記得呼叫 frame.setSelectedVendorId(id)
+// ✅ 美化後的 VendorLoginPanel，含 StyledButton 與字體調整
 package Layout;
 
 import java.awt.*;
@@ -18,23 +17,28 @@ public class VendorLoginPanel extends JPanel {
     public JPasswordField passwordField;
     public JPanel idPanel;
     public JPanel passwordPanel;
-    public JButton loginBtn;
+    public StyledButton loginBtn;
     public JPanel bottomPanel;
     public JPanel titlePanel;
-    public JButton absoluteBackBtn;
+    public StyledButton absoluteBackBtn;
 
     public VendorLoginPanel(MainFrame frame) {
         setLayout(new BorderLayout());
 
         layeredPane = new JLayeredPane();
         layeredPane.setLayout(null);
+        layeredPane.setPreferredSize(new Dimension(400, 600));
 
         title = new JLabel("攤販登入介面", SwingConstants.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
+        title.setFont(new Font("Microsoft JhengHei", Font.BOLD, 30));
+
+        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        titlePanel.setBounds(0, 80, 400, 60);
+        titlePanel.add(title);
+        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
 
         formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
         idField = new JTextField(15);
         idField.setPreferredSize(new Dimension(150, 30));
@@ -45,17 +49,23 @@ public class VendorLoginPanel extends JPanel {
         passwordField.setMaximumSize(new Dimension(150, 30));
 
         idPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        idPanel.add(new JLabel("攤位編號："));
+        JLabel idLabel = new JLabel("攤位編號：");
+        idLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 18));
+        idPanel.add(idLabel);
         idPanel.add(idField);
 
         passwordPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        passwordPanel.add(new JLabel("攤位密碼："));
+        JLabel pwdLabel = new JLabel("攤位密碼：");
+        pwdLabel.setFont(new Font("Microsoft JhengHei", Font.BOLD, 18));
+        passwordPanel.add(pwdLabel);
         passwordPanel.add(passwordField);
 
         formPanel.add(idPanel);
         formPanel.add(passwordPanel);
+        formPanel.setBounds(0, 160, 400, 100);
+        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
 
-        loginBtn = new JButton("登入");
+        loginBtn = new StyledButton("登入");
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String id = idField.getText().trim();
@@ -76,7 +86,7 @@ public class VendorLoginPanel extends JPanel {
                     reader.close();
 
                     if (password.equals(dbPassword)) {
-                        frame.setSelectedVendorId(id); // ✅ 登入成功後記下這個攤位 ID
+                        frame.setSelectedVendorId(id);
                         frame.switchTo("VendorEdit");
                     } else {
                         JOptionPane.showMessageDialog(VendorLoginPanel.this, "帳號或密碼錯誤！");
@@ -93,18 +103,12 @@ public class VendorLoginPanel extends JPanel {
 
         bottomPanel = new JPanel();
         bottomPanel.add(loginBtn);
-
-        titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        titlePanel.add(title);
-        titlePanel.setBounds(0, 0, 400, 60);
-        layeredPane.add(titlePanel, JLayeredPane.DEFAULT_LAYER);
-        formPanel.setBounds(0, 60, 400, 120);
-        layeredPane.add(formPanel, JLayeredPane.DEFAULT_LAYER);
-        bottomPanel.setBounds(0, 180, 400, 60);
+        bottomPanel.setBounds(0, 270, 400, 60);
         layeredPane.add(bottomPanel, JLayeredPane.DEFAULT_LAYER);
 
-        absoluteBackBtn = new JButton("←");
-        absoluteBackBtn.setMargin(new Insets(2, 6, 2, 6));
+        absoluteBackBtn = new StyledButton("←");
+        absoluteBackBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        absoluteBackBtn.setPreferredSize(new Dimension(50, 30));
         absoluteBackBtn.setBounds(10, 10, 50, 30);
         absoluteBackBtn.addActionListener(e -> {
             frame.switchTo("Login");
