@@ -109,7 +109,7 @@ public class CustomerBrowsePanel extends JPanel {
 
     public class VendorButton extends JButton {
         public VendorButton(MainFrame frame, String vendorId, String name, String tags) {
-            setText(vendorId + ". " + name + " #" + tags);
+            setText(vendorId + ". " + name + "   #" + tags);
             setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
             setPreferredSize(new Dimension(0, 100));
             addActionListener(e -> {

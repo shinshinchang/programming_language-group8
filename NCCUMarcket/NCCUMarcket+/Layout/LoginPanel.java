@@ -18,6 +18,17 @@ public class LoginPanel extends JPanel {
         titlePanel.setBorder(BorderFactory.createEmptyBorder(80, 0, 40, 0));
         titlePanel.add(title);
         add(titlePanel, BorderLayout.NORTH);
+        // === NCCU Logo 區 ===
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("images.png")); // 確保路徑正確
+        Image logoImage = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(logoImage));
+        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel logoPanel = new JPanel();
+        logoPanel.setBackground(getBackground());
+        logoPanel.add(logoLabel);
+        add(logoPanel, BorderLayout.CENTER);
+
 
         // === 按鈕區 ===
         JPanel buttonPanel = new JPanel();
@@ -39,7 +50,13 @@ public class LoginPanel extends JPanel {
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setBackground(getBackground());
         centerWrapper.add(buttonPanel);
-        add(centerWrapper, BorderLayout.CENTER);
+        JPanel middleWrapper = new JPanel();
+        middleWrapper.setLayout(new BorderLayout());
+        middleWrapper.setBackground(getBackground());
+        middleWrapper.add(logoPanel, BorderLayout.NORTH);
+        middleWrapper.add(centerWrapper, BorderLayout.CENTER);
+        add(middleWrapper, BorderLayout.CENTER);
+
     }
 
     // === 自訂圓角按鈕類別，含按壓變色 ===
