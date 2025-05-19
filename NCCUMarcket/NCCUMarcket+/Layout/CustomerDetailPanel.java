@@ -46,6 +46,38 @@ public class CustomerDetailPanel extends VendorEditPanel {
 
     }
 
+    public void setVendorData(String stallId) {
+    try {
+        URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + stallId + ".json");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            response.append(line);
+        }
+        reader.close();
+
+        Gson gson = new Gson();
+        Map<String, Object> vendorData = gson.fromJson(response.toString(), new TypeToken<Map<String, Object>>() {}.getType());
+
+        if (vendorData != null) {
+            String name = (String) vendorData.get("name");
+            super.title.setText(name != null ? name : "商家名稱未提供");
+
+            // 同步設定欄位（如你要顯示詳細資料）
+            stallIdField.setText(stallId);
+            nameField.setText(name);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "❌ 無法載入商家資訊！");
+    }
+}
+
+
     private void openCommentDialog() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "新增留言", true);
         dialog.setSize(400, 300);
