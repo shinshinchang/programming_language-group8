@@ -2,6 +2,10 @@ package Layout;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import javax.swing.*;
 
 public class AdminLoginPanel extends JPanel {
@@ -45,18 +49,38 @@ public class AdminLoginPanel extends JPanel {
 
         loginBtn = new StyledButton("登入");
         loginBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                inputPassword = new String(passwordField.getPassword());
-                dbPassword = "1234";//這裡抓資料庫的Password比對
-                if (inputPassword.equals(dbPassword)) {
-                    frame.switchTo("AdminEdit");
-                    clearFields();
-                } else {
-                    JOptionPane.showMessageDialog(AdminLoginPanel.this, "請輸入正確密碼！");
-                }
-                
+    public void actionPerformed(ActionEvent e) {
+        inputPassword = new String(passwordField.getPassword());
+
+        try {
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/admin_password.json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            
+            String response = reader.readLine();
+            reader.close();
+
+            System.out.println("Firebase 回傳原始資料: " + response);
+
+            dbPassword = response.replaceAll("[\"\\\\]", "");
+            System.out.println("解析後 dbPassword: " + dbPassword);
+            System.out.println("使用者輸入 inputPassword: " + inputPassword);
+
+            if (inputPassword.equals(dbPassword)) {
+                frame.switchTo("AdminEdit");
+                clearFields();
+            } else {
+                JOptionPane.showMessageDialog(AdminLoginPanel.this, "請輸入正確密碼！");
             }
-        });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(AdminLoginPanel.this, "❌ 登入錯誤：" + ex.getMessage());
+        }
+    }
+});
+
 
         bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         bottomPanel.add(loginBtn);

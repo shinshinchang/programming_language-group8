@@ -38,7 +38,7 @@ public class AdminEditPanel extends JPanel {
 
         pwChangeBtn = new StyledButton("更改密碼");
         pwChangeBtn.setBounds(100, 260, 200, 45);
-        pwChangeBtn.addActionListener(e -> frame.switchTo("pwChangeBtn"));
+        pwChangeBtn.addActionListener(e -> frame.switchTo("AdminChangePassword"));
         layeredPane.add(pwChangeBtn, JLayeredPane.DEFAULT_LAYER);
 
         absoluteBackBtn = new StyledButton("←");

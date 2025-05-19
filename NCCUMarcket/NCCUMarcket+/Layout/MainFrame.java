@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     AdminBrowsePanel AdminBrowse;
     AdminDatabasePanel AdminDatabase;
     AdminVendorEditPanel AdminVendorEdit;
+    AdminChangePasswordPanel AdminChangePassword;
     LoginPanel Login;
 
     public MainFrame() {
@@ -36,6 +37,7 @@ public class MainFrame extends JFrame {
         AdminDatabase = new AdminDatabasePanel(this);
         AdminVendorEdit = new AdminVendorEditPanel(this);
         Login = new LoginPanel(this);
+        AdminChangePassword = new AdminChangePasswordPanel(this);
 
         // 延後初始化 VendorEditPanel（在 setSelectedVendorId 時再補）
         VendorEdit = new VendorEditPanel(this);
@@ -51,6 +53,8 @@ public class MainFrame extends JFrame {
         mainPanel.add(AdminDatabase, "AdminDatabase");
         mainPanel.add(AdminVendorEdit, "AdminVendorEdit");
         mainPanel.add(Login, "Login");
+        mainPanel.add(AdminChangePassword, "AdminChangePassword");
+
 
         add(mainPanel);
         layout.show(mainPanel, "Login");
