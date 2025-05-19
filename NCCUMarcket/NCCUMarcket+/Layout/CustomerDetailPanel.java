@@ -70,6 +70,7 @@ public class CustomerDetailPanel extends VendorEditPanel {
             // 同步設定欄位（如你要顯示詳細資料）
             stallIdField.setText(stallId);
             nameField.setText(name);
+            refresh(stallId);
         }
     } catch (Exception e) {
         e.printStackTrace();
