@@ -38,6 +38,8 @@ public class AdminChangePasswordPanel extends JPanel {
         layeredPane.add(confirmBtn, JLayeredPane.DEFAULT_LAYER);
 
         backBtn = new StyledButton("←");
+        backBtn.setFont(new Font("Microsoft JhengHei", Font.BOLD, 14));
+        backBtn.setPreferredSize(new Dimension(50, 30));
         backBtn.setBounds(10, 10, 50, 30);
         backBtn.addActionListener(e -> frame.switchTo("AdminEdit"));
         layeredPane.add(backBtn, JLayeredPane.PALETTE_LAYER);
