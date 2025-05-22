@@ -22,7 +22,7 @@ public class AdminVendorEditPanel extends VendorEditPanel {
         for (ActionListener al : absoluteBackBtn.getActionListeners()) {
             absoluteBackBtn.removeActionListener(al);
         }
-        absoluteBackBtn.addActionListener(e -> frame.switchTo("AdminEdit"));
+        absoluteBackBtn.addActionListener(e -> frame.switchTo("AdminBrowse"));
 
     }
 
@@ -42,39 +42,47 @@ public class AdminVendorEditPanel extends VendorEditPanel {
             reader.close();
 
             if (comments != null) {
-            for (Map.Entry<String, Map<String, Object>> entry : comments.entrySet()) {
-                String commentId = entry.getKey();
-                Map<String, Object> data = entry.getValue();
-                String name = (String) data.get("name");
-                String text = (String) data.get("comment");
+                for (Map.Entry<String, Map<String, Object>> entry : comments.entrySet()) {
+                    String commentId = entry.getKey();
+                    Map<String, Object> data = entry.getValue();
+                    String name = (String) data.get("name");
+                    String text = (String) data.get("comment");
 
-                JPanel singleCommentPanel = new JPanel(new BorderLayout());
-                JTextArea area = new JTextArea("👤 " + name + "：" + text);
-                area.setLineWrap(true);
-                area.setWrapStyleWord(true);
-                area.setEditable(false);
-                area.setBackground(new Color(245, 245, 245));
-                area.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-                singleCommentPanel.add(area, BorderLayout.CENTER);
+                    // 每則留言外框
+                    JPanel commentBox = new JPanel();
+                    commentBox.setLayout(new BoxLayout(commentBox, BoxLayout.Y_AXIS));
+                    commentBox.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    commentBox.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+                    commentBox.setBackground(new Color(245, 245, 245));
 
-                // ➕ 刪除按鈕
-                JButton deleteBtn = new JButton("刪除");
-                deleteBtn.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
-                deleteBtn.setMargin(new Insets(2, 5, 2, 5));
-                deleteBtn.addActionListener(e -> {
-                    int confirm = JOptionPane.showConfirmDialog(this, "確定要刪除這則留言嗎？", "確認刪除", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        deleteComment(id, commentId);
-                    }
-                });
+                    // 留言內容
+                    JTextArea area = new JTextArea("👤 " + name + "：" + text);
+                    area.setLineWrap(true);
+                    area.setWrapStyleWord(true);
+                    area.setEditable(false);
+                    area.setBackground(new Color(245, 245, 245));
+                    area.setBorder(null);
+                    area.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+                    commentBox.add(area);
 
-                JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                btnPanel.add(deleteBtn);
-                singleCommentPanel.add(btnPanel, BorderLayout.SOUTH);
+                    // 刪除按鈕（靠右）
+                    JButton deleteBtn = new JButton("刪除");
+                    deleteBtn.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 12));
+                    deleteBtn.setMargin(new Insets(2, 5, 2, 5));
+                    deleteBtn.setAlignmentX(Component.RIGHT_ALIGNMENT);
+                    deleteBtn.addActionListener(e -> {
+                        int confirm = JOptionPane.showConfirmDialog(this, "確定要刪除這則留言嗎？", "確認刪除", JOptionPane.YES_NO_OPTION);
+                        if (confirm == JOptionPane.YES_OPTION) {
+                            deleteComment(id, commentId);
+                        }
+                    });
+                    commentBox.add(Box.createVerticalStrut(2)); // 小間距
+                    commentBox.add(deleteBtn);
 
-                commentPanel.add(Box.createVerticalStrut(5));
-                commentPanel.add(singleCommentPanel);
-            }
+                    // 加入主留言區
+                    commentPanel.add(Box.createVerticalStrut(6));
+                    commentPanel.add(commentBox);
+                }
             } else {
                 commentPanel.add(new JLabel("目前尚無評論"));
             }

@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.lang.reflect.Type;
 import com.google.gson.Gson;
@@ -43,7 +44,7 @@ public class VendorEditPanel extends JPanel {
 
         contentPanel = new JPanel();
         contentPanel.setLayout(null);
-        contentPanel.setPreferredSize(new Dimension(400, 900));
+        contentPanel.setPreferredSize(new Dimension(400, 1200));
 
         scrollPane = new JScrollPane(contentPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -119,54 +120,62 @@ public class VendorEditPanel extends JPanel {
 
         submitBtn = new StyledButton("更新資料");
         submitBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String id = stallIdField.getText().trim();
-                    if (id.isEmpty()) {
-                        JOptionPane.showMessageDialog(VendorEditPanel.this, "錯誤：找不到攤位編號！");
-                        return;
-                    }
-                    String name = nameField.getText();
-                    String description = promoArea.getText();
-                    String contact = contactField.getText();
-                    boolean supportPay = mobilePay.isSelected();
-
-                    StringBuilder tagsBuilder = new StringBuilder();
-                    if (eatTag.isSelected()) tagsBuilder.append("好吃");
-                    if (drinkTag.isSelected()) tagsBuilder.append("好喝");
-                    if (cultureTag.isSelected()) tagsBuilder.append("文創");
-                    if (fashionTag.isSelected()) tagsBuilder.append("穿搭時尚");
-                    if (otherTag.isSelected()) tagsBuilder.append("其他");
-
-                    String tags = tagsBuilder.toString().trim();
-
-                    String json = String.format(
-                        "{\"record_id\":\"%s\",\"name\":\"%s\",\"tags\":\"%s\",\"description\":\"%s\",\"contact_info\":\"%s\",\"support_mobile_payment\":%b}",
-                        id, name, tags, description, contact, supportPay);
-
-                    URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("PUT");
-                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                    conn.setDoOutput(true);
-
-                    try (OutputStream os = conn.getOutputStream()) {
-                        byte[] input = json.getBytes(StandardCharsets.UTF_8);
-                        os.write(input, 0, input.length);
-                    }
-
-                    int responseCode = conn.getResponseCode();
-                    if (responseCode == 200) {
-                        JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功更新資料到 Firebase！");
-                    } else {
-                        JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(VendorEditPanel.this, "🚨 發生錯誤：" + ex.getMessage());
-                }
+    public void actionPerformed(ActionEvent e) {
+        try {
+            String id = stallIdField.getText().trim();
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(VendorEditPanel.this, "錯誤：找不到攤位編號！");
+                return;
             }
-        });
+
+            String name = nameField.getText();
+            String description = promoArea.getText();
+            String contact = contactField.getText();
+            boolean supportPay = mobilePay.isSelected();
+
+            StringBuilder tagsBuilder = new StringBuilder();
+            if (eatTag.isSelected()) tagsBuilder.append("好吃");
+            if (drinkTag.isSelected()) tagsBuilder.append("好喝");
+            if (cultureTag.isSelected()) tagsBuilder.append("文創");
+            if (fashionTag.isSelected()) tagsBuilder.append("穿搭時尚");
+            if (otherTag.isSelected()) tagsBuilder.append("其他");
+            String tags = tagsBuilder.toString().trim();
+
+            // ✅ 改用 Map + Gson 安全打包 JSON
+            Map<String, Object> data = new HashMap<>();
+            data.put("record_id", id);
+            data.put("name", name);
+            data.put("tags", tags);
+            data.put("description", description);
+            data.put("contact_info", contact);
+            data.put("support_mobile_payment", supportPay);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(data);
+
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + ".json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setDoOutput(true);
+
+            try (OutputStream os = conn.getOutputStream()) {
+                os.write(json.getBytes(StandardCharsets.UTF_8));
+            }
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+                JOptionPane.showMessageDialog(VendorEditPanel.this, "✅ 成功更新資料到 Firebase！");
+            } else {
+                JOptionPane.showMessageDialog(VendorEditPanel.this, "❌ 傳送失敗，HTTP Code: " + responseCode);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(VendorEditPanel.this, "🚨 發生錯誤：" + ex.getMessage());
+        }
+    }
+});
+
 
         bottomPanel = new JPanel();
         bottomPanel.setBounds(10, 470, 360, 50);
@@ -175,7 +184,7 @@ public class VendorEditPanel extends JPanel {
 
         commentPanel = new JPanel();
         commentPanel.setLayout(new BoxLayout(commentPanel, BoxLayout.Y_AXIS));
-        commentPanel.setBounds(10, 540, 360, 300);
+        commentPanel.setBounds(10, 540, 360, 600);
         commentTitle = new JLabel("顧客評價");
         commentTitle.setFont(new Font("Microsoft JhengHei", Font.BOLD, 18));
         commentPanel.add(commentTitle);

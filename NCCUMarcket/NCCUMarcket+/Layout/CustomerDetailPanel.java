@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
 import com.google.gson.Gson;
@@ -47,37 +48,39 @@ public class CustomerDetailPanel extends VendorEditPanel {
     }
 
     public void setVendorData(String stallId) {
-    try {
-        URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + stallId + ".json");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
+        try {
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + stallId
+                    + ".json");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-        StringBuilder response = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            Gson gson = new Gson();
+            Map<String, Object> vendorData = gson.fromJson(response.toString(), new TypeToken<Map<String, Object>>() {
+            }.getType());
+
+            if (vendorData != null) {
+                String name = (String) vendorData.get("name");
+                super.title.setText(name != null ? name : "商家名稱未提供");
+
+                // 同步設定欄位（如你要顯示詳細資料）
+                stallIdField.setText(stallId);
+                nameField.setText(name);
+                refresh(stallId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "❌ 無法載入商家資訊！");
         }
-        reader.close();
-
-        Gson gson = new Gson();
-        Map<String, Object> vendorData = gson.fromJson(response.toString(), new TypeToken<Map<String, Object>>() {}.getType());
-
-        if (vendorData != null) {
-            String name = (String) vendorData.get("name");
-            super.title.setText(name != null ? name : "商家名稱未提供");
-
-            // 同步設定欄位（如你要顯示詳細資料）
-            stallIdField.setText(stallId);
-            nameField.setText(name);
-            refresh(stallId);
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "❌ 無法載入商家資訊！");
     }
-}
-
 
     private void openCommentDialog() {
         JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "新增留言", true);
@@ -93,14 +96,14 @@ public class CustomerDetailPanel extends VendorEditPanel {
         // 自動取得顧客名稱（暱稱）
         String nickname = frame.getCustomerNickname();
 
-        panel.add(new JLabel("您的暱稱：" + nickname));   
-        panel.add(new JLabel("輸入留言："));   
+        panel.add(new JLabel("您的暱稱：" + nickname));
+        panel.add(new JLabel("輸入留言："));
         panel.add(new JScrollPane(commentArea));
 
         JButton submitBtn = new JButton("送出留言");
         submitBtn.addActionListener(e -> {
             String comment = commentArea.getText().trim();
-            
+
             if (comment.isEmpty()) {
                 JOptionPane.showMessageDialog(dialog, "請輸入留言內容！");
                 return;
@@ -115,26 +118,32 @@ public class CustomerDetailPanel extends VendorEditPanel {
 
     private void sendCommentToDatabase(String id, String comment, String nickname, JDialog dialog) {
         try {
-            String json = String.format("{\"comment\":\"%s\", \"name\":\"%s\"}", comment, nickname);
-            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id + "/comments.json");
+            // 1. 組成 Map 物件（鍵值對）
+            Map<String, String> data = new HashMap<>();
+            data.put("comment", comment);
+            data.put("name", nickname);
+
+            // 2. 轉換為 JSON 字串
+            Gson gson = new Gson();
+            String json = gson.toJson(data);
+
+            // 3. 建立連線
+            URL url = new URL("https://nccu-market-default-rtdb.asia-southeast1.firebasedatabase.app/vendors/" + id
+                    + "/comments.json");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setDoOutput(true);
 
-                    
             try (OutputStream os = conn.getOutputStream()) {
-                    
-                    
                 os.write(json.getBytes(StandardCharsets.UTF_8));
-                    
             }
 
             int code = conn.getResponseCode();
             if (code == 200) {
                 JOptionPane.showMessageDialog(dialog, "✅ 留言成功！");
                 dialog.dispose();
-                refreshComments(id); // 自動刷新留言
+                refreshComments(id);
             } else {
                 JOptionPane.showMessageDialog(dialog, "❌ 留言失敗，HTTP Code: " + code);
             }
@@ -144,4 +153,4 @@ public class CustomerDetailPanel extends VendorEditPanel {
         }
     }
 
-}  
+}
