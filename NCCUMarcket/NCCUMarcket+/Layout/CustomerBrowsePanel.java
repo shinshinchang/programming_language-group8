@@ -41,7 +41,7 @@ public class CustomerBrowsePanel extends JPanel {
         tagEat = new JCheckBox("好吃");
         tagDrink = new JCheckBox("好喝");
         tagCulture = new JCheckBox("文創");
-        tagFashion = new JCheckBox("時尚穿搭");
+        tagFashion = new JCheckBox("穿搭時尚");
         tagOther = new JCheckBox("其他");
 
         tagEat.setFont(new Font("Microsoft JhengHei", Font.PLAIN, 14));
@@ -138,7 +138,7 @@ public class CustomerBrowsePanel extends JPanel {
         if (tagCulture.isSelected())
             selectedTags.add("文創");
         if (tagFashion.isSelected())
-            selectedTags.add("時尚穿搭");
+            selectedTags.add("穿搭時尚");
         if (tagOther.isSelected())
             selectedTags.add("其他");
 
